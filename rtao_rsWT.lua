@@ -1,135 +1,152 @@
--- SETTINGS
-local WEBHOOK_URL = "https://discord.com/api/webhooks/1277264390210453526/uln2Y6QlG5wN6dPVscdN8hAaBv37WuRXNYTCNANS8dWg4uRHTiNSegcsJxaUdV6Fng69" -- ใส่ URL Webhook ของคุณตรงนี้
+-- 🌱 RTaO Stock + Weather Bot (Base64 Webhook)
+-- Version: 1.3 รวม Weather แจ้งเตือน
 
--- SERVICES
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
+_G.Enabled = true
+
+-- Base64 Decoder (ไม่ใช้ syn)
+local function base64Decode(data)
+	local b = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
+	data = string.gsub(data, '[^'..b..'=]', '')
+	return (data:gsub('.', function(x)
+		if (x == '=') then return '' end
+		local r, f = '', (b:find(x) - 1)
+		for i = 6, 1, -1 do
+			r = r .. (f % 2 ^ i - f % 2 ^ (i - 1) > 0 and '1' or '0')
+		end
+		return r
+	end):gsub('%d%d%d?%d?%d?%d?%d?%d?', function(x)
+		if (#x ~= 8) then return '' end
+		local c = 0
+		for i = 1, 8 do
+			c = c + (x:sub(i, i) == '1' and 2 ^ (8 - i) or 0)
+		end
+		return string.char(c)
+	end))
+end
+
+-- Webhook Table (Base64)
+local encodedWebhooks = {
+	["ROOT/SeedStock/Stocks"] = "aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTI3NzI2NDM5MDIxMDQ1MzUyNi91bG4yWTZRbEc1d042ZFBWc2NkTjhoQWFCdjM3V3VSWE5ZVENOQU5TOGRXZzR1UkhUaU5TZWdjc0p4YVVkVjZGbmc2OQ==",
+	["ROOT/PetEggStock/Stocks"] = "aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTI3NzI2NDM5MDIxMDQ1MzUyNi91bG4yWTZRbEc1d042ZFBWc2NkTjhoQWFCdjM3V3VSWE5ZVENOQU5TOGRXZzR1UkhUaU5TZWdjc0p4YVVkVjZGbmc2OQ==",
+	["ROOT/GearStock/Stocks"] = "aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTI3NzI2NDM5MDIxMDQ1MzUyNi91bG4yWTZRbEc1d042ZFBWc2NkTjhoQWFCdjM3V3VSWE5ZVENOQU5TOGRXZzR1UkhUaU5TZWdjc0p4YVVkVjZGbmc2OQ==",
+	["ROOT/CosmeticStock/ItemStocks"] = "aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTI3NzI2NDM5MDIxMDQ1MzUyNi91bG4yWTZRbEc1d042ZFBWc2NkTjhoQWFCdjM3V3VSWE5ZVENOQU5TOGRXZzR1UkhUaU5TZWdjc0p4YVVkVjZGbmc2OQ==",
+	["ROOT/EventShopStock/Stocks"] = "aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTI3NzI2NDM5MDIxMDQ1MzUyNi91bG4yWTZRbEc1d042ZFBWc2NkTjhoQWFCdjM3V3VSWE5ZVENOQU5TOGRXZzR1UkhUaU5TZWdjc0p4YVVkVjZGbmc2OQ==",
+	["__WEATHER__"] = "aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTI3NzI2NDM5MDIxMDQ1MzUyNi91bG4yWTZRbEc1d042ZFBWc2NkTjhoQWFCdjM3V3VSWE5ZVENOQU5TOGRXZzR1UkhUaU5TZWdjc0p4YVVkVjZGbmc2OQ=="
+}
+
+-- Embed Layout
+_G.Layout = {
+	["ROOT/SeedStock/Stocks"] = { title = "🌱 SEEDS STOCK", color = 65280 },
+	["ROOT/PetEggStock/Stocks"] = { title = "🥚 EGG STOCK", color = 16776960 },
+	["ROOT/GearStock/Stocks"] = { title = "🛠️ GEAR STOCK", color = 16753920 },
+	["ROOT/CosmeticStock/ItemStocks"] = { title = "🎨 COSMETIC STOCK", color = 16737792 },
+	["ROOT/EventShopStock/Stocks"] = { title = "🎁 EVENT STOCK", color = 10027263 }
+}
+
+-- 🔧 Settings
+local defaultImage = "https://cdn.discordapp.com/attachments/1217027368825262144/1388582267881914568/1717516914963.png"
+
+-- Services
 local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local HttpService = game:GetService("HttpService")
-
 local LocalPlayer = Players.LocalPlayer
 
--- REMOTES
+-- Remotes
 local DataStream = ReplicatedStorage:WaitForChild("GameEvents"):WaitForChild("DataStream")
 local WeatherEventStarted = ReplicatedStorage:WaitForChild("GameEvents"):WaitForChild("WeatherEventStarted")
 
--- CONFIG
-local Layouts = {
-	["SeedsAndGears"] = {
-		Color = Color3.fromRGB(56, 238, 23),
-		Layout = {
-			["ROOT/SeedStock/Stocks"] = "🌱 SEEDS STOCK",
-			["ROOT/GearStock/Stocks"] = "🛠️ GEAR STOCK"
-		}
-	},
-	["Eggs"] = {
-		Color = Color3.fromRGB(251, 255, 14),
-		Layout = {
-			["ROOT/PetEggStock/Stocks"] = "🥚 EGG STOCK"
-		}
-	},
-	["CosmeticStock"] = {
-		Color = Color3.fromRGB(255, 106, 42),
-		Layout = {
-			["ROOT/CosmeticStock/ItemStocks"] = "🎨 COSMETIC ITEMS STOCK"
-		}
-	},
-	["Weather"] = {
-		Color = Color3.fromRGB(42, 109, 255)
-	}
-}
-
--- UTILS
-local function ToHex(Color)
-	return tonumber(Color:ToHex(), 16)
+-- Request Fallback
+local requestFunc = http_request or request or (syn and syn.request)
+if not requestFunc then
+	warn("❌ Executor นี้ไม่รองรับ HTTP Request")
+	return
 end
 
-local function GetDataPacket(Data, Target)
-	for _, Packet in Data do
-		if Packet[1] == Target then
-			return Packet[2]
-		end
+-- Convert Stock Table to String
+local function GetStockString(stock)
+	local s = ""
+	for name, data in pairs(stock) do
+		local display = data.EggName or name
+		s ..= (`{display} x{data.Stock}\n`)
 	end
+	return s
 end
 
-local function MakeStockString(Stock)
-	if typeof(Stock) ~= "table" then
-		return "⚠️ No data\n"
-	end
-
-	local str = ""
-	for name, data in Stock do
-		local amount = data.Stock or 0
-		local eggName = data.EggName
-		name = eggName or name or "Unknown"
-		str ..= `{name} **x{amount}**\n`
-	end
-	return str
-end
-
-local function SendWebhook(layoutType, fields)
-	local layout = Layouts[layoutType]
-	if not layout then return end
+-- Send Webhook (Single Embed)
+local function SendSingleEmbed(title, bodyText, color, encodedWebhook, imageUrl)
+	if not _G.Enabled or not requestFunc or not encodedWebhook or bodyText == "" then return end
+	local webhookUrl = base64Decode(encodedWebhook)
 
 	local embed = {
-		color = ToHex(layout.Color),
-		fields = fields,
-		footer = { text = "BY RTaO_Rs" },
-		timestamp = DateTime.now():ToIsoDate()
+		title = title,
+		description = bodyText,
+		color = color,
+		timestamp = DateTime.now():ToIsoDate(),
+		footer = { text = "RTaO Stock Tracker" }
 	}
 
-	local body = HttpService:JSONEncode({ embeds = { embed } })
-	
-	task.spawn(function()
-		pcall(function()
-			request({
-				Url = WEBHOOK_URL,
-				Method = "POST",
-				Headers = { ["Content-Type"] = "application/json" },
-				Body = body
-			})
-		end)
+	if imageUrl then
+		embed.image = { url = imageUrl }
+	end
+
+	local body = { embeds = { embed } }
+
+	local success, result = pcall(function()
+		return requestFunc({
+			Url = webhookUrl,
+			Method = "POST",
+			Headers = {["Content-Type"] = "application/json"},
+			Body = HttpService:JSONEncode(body)
+		})
 	end)
+
+	if success then
+		print("[✅] ส่ง Webhook:", title)
+	else
+		warn("[❌] ไม่สามารถส่ง Webhook:", title)
+	end
 end
 
-local function HandleStockUpdate(Data)
-	for type, layout in Layouts do
-		if not layout.Layout then continue end
-
-		local fields = {}
-
-		for packetPath, title in layout.Layout do
-			local stock = GetDataPacket(Data, packetPath)
-			if not stock then continue end
-
-			local stockString = MakeStockString(stock)
-			table.insert(fields, {
-				name = title,
-				value = stockString,
-				inline = true
-			})
-		end
-
-		if #fields > 0 then
-			SendWebhook(type, fields)
+-- หา Stock จาก Packet
+local function GetPacket(data, key)
+	for _, packet in ipairs(data) do
+		if packet[1] == key then
+			return packet[2]
 		end
 	end
 end
 
--- HOOKS
+-- 📥 Stock Update Event
 DataStream.OnClientEvent:Connect(function(eventType, profile, data)
-	if eventType == "UpdateData" and profile:find(LocalPlayer.Name) then
-		HandleStockUpdate(data)
+	if eventType ~= "UpdateData" or not profile:find(LocalPlayer.Name) then return end
+
+	for path, layout in pairs(_G.Layout) do
+		local stockData = GetPacket(data, path)
+		if stockData then
+			local stockStr = GetStockString(stockData)
+			local encodedWebhook = encodedWebhooks[path]
+			SendSingleEmbed(layout.title, stockStr, layout.color, encodedWebhook, defaultImage)
+		end
 	end
 end)
 
+-- ⛅ Weather Event Listener
 WeatherEventStarted.OnClientEvent:Connect(function(eventName, duration)
-	local endTime = math.round(workspace:GetServerTimeNow()) + duration
+	local webhook = encodedWebhooks["__WEATHER__"]
+	if not webhook then return end
 
-	SendWebhook("Weather", {
-		{
-			name = "🏔️ WEATHER",
-			value = `{eventName}\nEnds: <t:{endTime}:R>`,
-			inline = true
-		}
+	local endTime = math.round(workspace:GetServerTimeNow()) + duration
+	local desc = `☁️ **{eventName}**\n🕒 Ends: <t:{endTime}:R>`
+	SendSingleEmbed("🌦️ WEATHER EVENT", desc, 255, webhook, defaultImage)
+end)
+
+-- UI Success Notification (optional)
+pcall(function()
+	game.StarterGui:SetCore("SendNotification", {
+		Title = "RTaO Webhook",
+		Text = "Stock + Weather Tracker Loaded",
+		Duration = 3,
+		Icon = "rbxassetid://70576862346242"
 	})
 end)
