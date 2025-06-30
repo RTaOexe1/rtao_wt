@@ -1,7 +1,7 @@
 --[[
     @author depso (depthso)
     @description Grow a Garden stock bot script
-    https://www.roblox.com/games/126884695634066
+    รองรับมือถือ / Roblox ปกติ
 ]]
 
 type table = {
@@ -9,17 +9,13 @@ type table = {
 }
 
 _G.Configuration = {
-	--// Reporting
 	["Enabled"] = true,
-	["Webhook"] = "https://discord.com/api/webhooks/1277264390210453526/uln2Y6QlG5wN6dPVscdN8hAaBv37WuRXNYTCNANS8dWg4uRHTiNSegcsJxaUdV6Fng69", -- replace with your webhook url
+	["Webhook"] = "https://discord.com/api/webhooks/1277264390210453526/uln2Y6QlG5wN6dPVscdN8hAaBv37WuRXNYTCNANS8dWg4uRHTiNSegcsJxaUdV6Fng69", -- ใส่ webhook ของคุณ
 	["Weather Reporting"] = true,
-	
-	--// User
 	["Anti-AFK"] = true,
 	["Auto-Reconnect"] = true,
 	["Rendering Enabled"] = false,
 
-	--// Embeds
 	["AlertLayouts"] = {
 		["Weather"] = {
 			EmbedColor = Color3.fromRGB(42, 109, 255),
@@ -59,10 +55,11 @@ local HttpService = game:GetService("HttpService")
 local VirtualUser = cloneref(game:GetService("VirtualUser"))
 local RunService = game:GetService("RunService")
 local GuiService = game:GetService("GuiService")
+local TeleportService = game:GetService("TeleportService")
 
 --// Remotes
-local DataStream = ReplicatedStorage.GameEvents.DataStream -- RemoteEvent 
-local WeatherEventStarted = ReplicatedStorage.GameEvents.WeatherEventStarted -- RemoteEvent 
+local DataStream = ReplicatedStorage.GameEvents.DataStream
+local WeatherEventStarted = ReplicatedStorage.GameEvents.WeatherEventStarted
 
 local LocalPlayer = Players.LocalPlayer
 
@@ -70,166 +67,126 @@ local function GetConfigValue(Key: string)
 	return _G.Configuration[Key]
 end
 
---// Set rendering enabled
-local Rendering = GetConfigValue("Rendering Enabled")
-RunService:Set3dRenderingEnabled(Rendering)
+RunService:Set3dRenderingEnabled(GetConfigValue("Rendering Enabled"))
 
---// Check if the script is already running
-if _G.StockBot then return end 
+if _G.StockBot then return end
 _G.StockBot = true
 
 local function ConvertColor3(Color: Color3): number
-	local Hex = Color:ToHex()
-	return tonumber(Hex, 16)
+	return tonumber(Color:ToHex(), 16)
 end
 
 local function GetDataPacket(Data, Target: string)
 	for _, Packet in Data do
-		local Name = Packet[1]
-		local Content = Packet[2]
-
-		if Name == Target then
-			return Content
+		if Packet[1] == Target then
+			return Packet[2]
 		end
 	end
-
-	return 
 end
 
 local function GetLayout(Type: string)
-	local Layouts = GetConfigValue("AlertLayouts")
-	return Layouts[Type]
+	return _G.Configuration.AlertLayouts[Type]
 end
 
+-- ✅ เวอร์ชันที่ใช้ PostAsync สำหรับมือถือ
 local function WebhookSend(Type: string, Fields: table)
 	local Enabled = GetConfigValue("Enabled")
 	local Webhook = GetConfigValue("Webhook")
 
-	--// Check if reports are enabled
-	if not Enabled then return end
+	if not Enabled or not Webhook then return end
 
 	local Layout = GetLayout(Type)
-	local Color = ConvertColor3(Layout.EmbedColor)
+	if not Layout then return end
 
-	--// Webhook data
+	local Color = ConvertColor3(Layout.EmbedColor)
 	local TimeStamp = DateTime.now():ToIsoDate()
+
 	local Body = {
-		embeds = {
-			{
-				color = Color,
-				fields = Fields,
-				footer = {
-					text = "BY RTaO_Rs" -- Please keep
-				},
-				timestamp = TimeStamp
-			}
-		}
+		embeds = {{
+			color = Color,
+			fields = Fields,
+			footer = { text = "BY RTaO_Rs" },
+			timestamp = TimeStamp
+		}}
 	}
 
-	local RequestData = {
-        Url = Webhook,
-        Method = "POST",
-        Headers = {
-            ["Content-Type"] = "application/json"
-        },
-        Body = HttpService:JSONEncode(Body)
-    }
+	local success, err = pcall(function()
+		HttpService:PostAsync(Webhook, HttpService:JSONEncode(Body), Enum.HttpContentType.ApplicationJson)
+	end)
 
-	--// Send POST request to the webhook
-	task.spawn(request, RequestData)
+	if not success then
+		warn("[Webhook Error]", err)
+	end
 end
 
 local function MakeStockString(Stock: table): string
-	local String = ""
-	for Name, Data in Stock do 
+	local s = ""
+	for Name, Data in Stock do
 		local Amount = Data.Stock
-		local EggName = Data.EggName 
-
+		local EggName = Data.EggName
 		Name = EggName or Name
-		String ..= `{Name} **x{Amount}**\n`
+		s ..= `{Name} **x{Amount}**\n`
 	end
-
-	return String
+	return s
 end
 
 local function ProcessPacket(Data, Type: string, Layout)
 	local Fields = {}
-	
-	local FieldsLayout = Layout.Layout
-	if not FieldsLayout then return end
+	if not Layout.Layout then return end
 
-	for Packet, Title in FieldsLayout do 
+	for Packet, Title in Layout.Layout do
 		local Stock = GetDataPacket(Data, Packet)
 		if not Stock then return end
 
-		local StockString = MakeStockString(Stock)
-		local Field = {
+		table.insert(Fields, {
 			name = Title,
-			value = StockString,
+			value = MakeStockString(Stock),
 			inline = true
-		}
-
-		table.insert(Fields, Field)
+		})
 	end
 
 	WebhookSend(Type, Fields)
 end
 
 DataStream.OnClientEvent:Connect(function(Type: string, Profile: string, Data: table)
-	if Type ~= "UpdateData" then return end
-	if not Profile:find(LocalPlayer.Name) then return end
+	if Type ~= "UpdateData" or not Profile:find(LocalPlayer.Name) then return end
 
-	local Layouts = GetConfigValue("AlertLayouts")
-	for Name, Layout in Layouts do
+	for Name, Layout in _G.Configuration.AlertLayouts do
 		ProcessPacket(Data, Name, Layout)
 	end
 end)
 
 WeatherEventStarted.OnClientEvent:Connect(function(Event: string, Length: number)
-	--// Check if Weather reports are enabled
-	local WeatherReporting = GetConfigValue("Weather Reporting")
-	if not WeatherReporting then return end
+	if not GetConfigValue("Weather Reporting") then return end
 
-	--// Calculate end unix
 	local ServerTime = math.round(workspace:GetServerTimeNow())
 	local EndUnix = ServerTime + Length
 
-	WebhookSend("Weather", {
-		{
-			name = "🏔️ WEATHER",
-			value = `{Event}\nEnds:<t:{EndUnix}:R>`,
-			inline = true
-		}
-	})
+	WebhookSend("Weather", {{
+		name = "🏔️ WEATHER",
+		value = `{Event}\nEnds:<t:{EndUnix}:R>`,
+		inline = true
+	}})
 end)
 
---// Anti idle
+-- Anti-AFK
 LocalPlayer.Idled:Connect(function()
-	--// Check if Anti-AFK is enabled
-	local AntiAFK = GetConfigValue("Anti-AFK")
-	if not AntiAFK then return end
-
+	if not GetConfigValue("Anti-AFK") then return end
 	VirtualUser:CaptureController()
 	VirtualUser:ClickButton2(Vector2.new())
 end)
 
---// Auto reconnect
+-- Auto Reconnect (ลบ queue_on_teleport)
 GuiService.ErrorMessageChanged:Connect(function()
+	if not GetConfigValue("Auto-Reconnect") then return end
+
 	local IsSingle = #Players:GetPlayers() <= 1
 	local PlaceId = game.PlaceId
 	local JobId = game.JobId
 
-	--// Check if Auto-Reconnect is enabled
-	local AutoReconnect = GetConfigValue("Auto-Reconnect")
-	if not AutoReconnect then return end
-
-	queue_on_teleport("https://gist.githubusercontent.com/depthso/7d9ec71436ccad0b4663c3baaba34f66/raw/5d7717a8da5590994bae698e0cef03fdb8bf42e5/Stockbot.lua")
-
-	--// Join a different server if the player is solo
 	if IsSingle then
 		TeleportService:Teleport(PlaceId, LocalPlayer)
-		return
+	else
+		TeleportService:TeleportToPlaceInstance(PlaceId, JobId, LocalPlayer)
 	end
-
-	TeleportService:TeleportToPlaceInstance(PlaceId, JobId, LocalPlayer)
 end)
