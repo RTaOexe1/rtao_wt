@@ -1,82 +1,49 @@
---[[
-    @author depso (depthso)
-    @description Grow a Garden stock bot script
-    รองรับมือถือ / Roblox ปกติ
-]]
+-- SETTINGS
+local WEBHOOK_URL = "https://discord.com/api/webhooks/1277264390210453526/uln2Y6QlG5wN6dPVscdN8hAaBv37WuRXNYTCNANS8dWg4uRHTiNSegcsJxaUdV6Fng69" -- ใส่ URL Webhook ของคุณตรงนี้
 
-type table = {
-	[any]: any
-}
-
-_G.Configuration = {
-	["Enabled"] = true,
-	["Webhook"] = "https://discord.com/api/webhooks/1277264390210453526/uln2Y6QlG5wN6dPVscdN8hAaBv37WuRXNYTCNANS8dWg4uRHTiNSegcsJxaUdV6Fng69", -- ใส่ webhook ของคุณ
-	["Weather Reporting"] = true,
-	["Anti-AFK"] = true,
-	["Auto-Reconnect"] = true,
-	["Rendering Enabled"] = false,
-
-	["AlertLayouts"] = {
-		["Weather"] = {
-			EmbedColor = Color3.fromRGB(42, 109, 255),
-		},
-		["SeedsAndGears"] = {
-			EmbedColor = Color3.fromRGB(56, 238, 23),
-			Layout = {
-				["ROOT/SeedStock/Stocks"] = "🌱 SEEDS STOCK",
-				["ROOT/GearStock/Stocks"] = "🛠️ GEAR STOCK"
-			}
-		},
-		["EventShop"] = {
-			EmbedColor = Color3.fromRGB(212, 42, 255),
-			Layout = {
-				["ROOT/EventShopStock/Stocks"] = "🎁 EVENT STOCK"
-			}
-		},
-		["Eggs"] = {
-			EmbedColor = Color3.fromRGB(251, 255, 14),
-			Layout = {
-				["ROOT/PetEggStock/Stocks"] = "🥚 EGG STOCK"
-			}
-		},
-		["CosmeticStock"] = {
-			EmbedColor = Color3.fromRGB(255, 106, 42),
-			Layout = {
-				["ROOT/CosmeticStock/ItemStocks"] = "🎨 COSMETIC ITEMS STOCK"
-			}
-		}
-	}
-}
-
---// Services
+-- SERVICES
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
 local HttpService = game:GetService("HttpService")
-local VirtualUser = cloneref(game:GetService("VirtualUser"))
-local RunService = game:GetService("RunService")
-local GuiService = game:GetService("GuiService")
-local TeleportService = game:GetService("TeleportService")
-
---// Remotes
-local DataStream = ReplicatedStorage.GameEvents.DataStream
-local WeatherEventStarted = ReplicatedStorage.GameEvents.WeatherEventStarted
 
 local LocalPlayer = Players.LocalPlayer
 
-local function GetConfigValue(Key: string)
-	return _G.Configuration[Key]
-end
+-- REMOTES
+local DataStream = ReplicatedStorage:WaitForChild("GameEvents"):WaitForChild("DataStream")
+local WeatherEventStarted = ReplicatedStorage:WaitForChild("GameEvents"):WaitForChild("WeatherEventStarted")
 
-RunService:Set3dRenderingEnabled(GetConfigValue("Rendering Enabled"))
+-- CONFIG
+local Layouts = {
+	["SeedsAndGears"] = {
+		Color = Color3.fromRGB(56, 238, 23),
+		Layout = {
+			["ROOT/SeedStock/Stocks"] = "🌱 SEEDS STOCK",
+			["ROOT/GearStock/Stocks"] = "🛠️ GEAR STOCK"
+		}
+	},
+	["Eggs"] = {
+		Color = Color3.fromRGB(251, 255, 14),
+		Layout = {
+			["ROOT/PetEggStock/Stocks"] = "🥚 EGG STOCK"
+		}
+	},
+	["CosmeticStock"] = {
+		Color = Color3.fromRGB(255, 106, 42),
+		Layout = {
+			["ROOT/CosmeticStock/ItemStocks"] = "🎨 COSMETIC ITEMS STOCK"
+		}
+	},
+	["Weather"] = {
+		Color = Color3.fromRGB(42, 109, 255)
+	}
+}
 
-if _G.StockBot then return end
-_G.StockBot = true
-
-local function ConvertColor3(Color: Color3): number
+-- UTILS
+local function ToHex(Color)
 	return tonumber(Color:ToHex(), 16)
 end
 
-local function GetDataPacket(Data, Target: string)
+local function GetDataPacket(Data, Target)
 	for _, Packet in Data do
 		if Packet[1] == Target then
 			return Packet[2]
@@ -84,109 +51,85 @@ local function GetDataPacket(Data, Target: string)
 	end
 end
 
-local function GetLayout(Type: string)
-	return _G.Configuration.AlertLayouts[Type]
+local function MakeStockString(Stock)
+	if typeof(Stock) ~= "table" then
+		return "⚠️ No data\n"
+	end
+
+	local str = ""
+	for name, data in Stock do
+		local amount = data.Stock or 0
+		local eggName = data.EggName
+		name = eggName or name or "Unknown"
+		str ..= `{name} **x{amount}**\n`
+	end
+	return str
 end
 
--- ✅ เวอร์ชันที่ใช้ PostAsync สำหรับมือถือ
-local function WebhookSend(Type: string, Fields: table)
-	local Enabled = GetConfigValue("Enabled")
-	local Webhook = GetConfigValue("Webhook")
+local function SendWebhook(layoutType, fields)
+	local layout = Layouts[layoutType]
+	if not layout then return end
 
-	if not Enabled or not Webhook then return end
-
-	local Layout = GetLayout(Type)
-	if not Layout then return end
-
-	local Color = ConvertColor3(Layout.EmbedColor)
-	local TimeStamp = DateTime.now():ToIsoDate()
-
-	local Body = {
-		embeds = {{
-			color = Color,
-			fields = Fields,
-			footer = { text = "BY RTaO_Rs" },
-			timestamp = TimeStamp
-		}}
+	local embed = {
+		color = ToHex(layout.Color),
+		fields = fields,
+		footer = { text = "BY RTaO_Rs" },
+		timestamp = DateTime.now():ToIsoDate()
 	}
 
-	local success, err = pcall(function()
-		HttpService:PostAsync(Webhook, HttpService:JSONEncode(Body), Enum.HttpContentType.ApplicationJson)
+	local body = HttpService:JSONEncode({ embeds = { embed } })
+	
+	task.spawn(function()
+		pcall(function()
+			request({
+				Url = WEBHOOK_URL,
+				Method = "POST",
+				Headers = { ["Content-Type"] = "application/json" },
+				Body = body
+			})
+		end)
 	end)
+end
 
-	if not success then
-		warn("[Webhook Error]", err)
+local function HandleStockUpdate(Data)
+	for type, layout in Layouts do
+		if not layout.Layout then continue end
+
+		local fields = {}
+
+		for packetPath, title in layout.Layout do
+			local stock = GetDataPacket(Data, packetPath)
+			if not stock then continue end
+
+			local stockString = MakeStockString(stock)
+			table.insert(fields, {
+				name = title,
+				value = stockString,
+				inline = true
+			})
+		end
+
+		if #fields > 0 then
+			SendWebhook(type, fields)
+		end
 	end
 end
 
-local function MakeStockString(Stock: table): string
-	local s = ""
-	for Name, Data in Stock do
-		local Amount = Data.Stock
-		local EggName = Data.EggName
-		Name = EggName or Name
-		s ..= `{Name} **x{Amount}**\n`
+-- HOOKS
+DataStream.OnClientEvent:Connect(function(eventType, profile, data)
+	if eventType == "UpdateData" and profile:find(LocalPlayer.Name) then
+		HandleStockUpdate(data)
 	end
-	return s
-end
+end)
 
-local function ProcessPacket(Data, Type: string, Layout)
-	local Fields = {}
-	if not Layout.Layout then return end
+WeatherEventStarted.OnClientEvent:Connect(function(eventName, duration)
+	local endTime = math.round(workspace:GetServerTimeNow()) + duration
 
-	for Packet, Title in Layout.Layout do
-		local Stock = GetDataPacket(Data, Packet)
-		if not Stock then return end
-
-		table.insert(Fields, {
-			name = Title,
-			value = MakeStockString(Stock),
+	SendWebhook("Weather", {
+		{
+			name = "🏔️ WEATHER",
+			value = `{eventName}\nEnds: <t:{endTime}:R>`,
 			inline = true
-		})
-	end
-
-	WebhookSend(Type, Fields)
-end
-
-DataStream.OnClientEvent:Connect(function(Type: string, Profile: string, Data: table)
-	if Type ~= "UpdateData" or not Profile:find(LocalPlayer.Name) then return end
-
-	for Name, Layout in _G.Configuration.AlertLayouts do
-		ProcessPacket(Data, Name, Layout)
-	end
-end)
-
-WeatherEventStarted.OnClientEvent:Connect(function(Event: string, Length: number)
-	if not GetConfigValue("Weather Reporting") then return end
-
-	local ServerTime = math.round(workspace:GetServerTimeNow())
-	local EndUnix = ServerTime + Length
-
-	WebhookSend("Weather", {{
-		name = "🏔️ WEATHER",
-		value = `{Event}\nEnds:<t:{EndUnix}:R>`,
-		inline = true
-	}})
-end)
-
--- Anti-AFK
-LocalPlayer.Idled:Connect(function()
-	if not GetConfigValue("Anti-AFK") then return end
-	VirtualUser:CaptureController()
-	VirtualUser:ClickButton2(Vector2.new())
-end)
-
--- Auto Reconnect (ลบ queue_on_teleport)
-GuiService.ErrorMessageChanged:Connect(function()
-	if not GetConfigValue("Auto-Reconnect") then return end
-
-	local IsSingle = #Players:GetPlayers() <= 1
-	local PlaceId = game.PlaceId
-	local JobId = game.JobId
-
-	if IsSingle then
-		TeleportService:Teleport(PlaceId, LocalPlayer)
-	else
-		TeleportService:TeleportToPlaceInstance(PlaceId, JobId, LocalPlayer)
-	end
+		}
+	})
 end)
