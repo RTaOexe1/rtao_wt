@@ -139,7 +139,6 @@ WeatherEventStarted.OnClientEvent:Connect(function(eventName, duration)
     local endTime = math.round(workspace:GetServerTimeNow()) + duration
     local playerCount = #Players:GetPlayers()
     local maxPlayers = Players.MaxPlayers
-    local jobId = game.JobId
     local teleportScript = 'game:GetService("TeleportService"):TeleportToPlaceInstance(' .. game.PlaceId .. ', "' .. jobId .. '", Players.LocalPlayer)'
 
     local desc = "☁️ " .. eventName ..
