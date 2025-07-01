@@ -139,12 +139,19 @@ WeatherEventStarted.OnClientEvent:Connect(function(eventName, duration)
     local endTime = math.round(workspace:GetServerTimeNow()) + duration
     local playerCount = #Players:GetPlayers()
     local maxPlayers = Players.MaxPlayers
-    local teleportScript = 'game:GetService("TeleportService"):TeleportToPlaceInstance(' .. game.PlaceId .. ', "' .. jobId .. '", Players.LocalPlayer)'
 
-    local desc = "☁️ " .. eventName ..
-                "\n🕒 Ends: <t:" .. endTime .. ":R>" ..
-                "\n\nPlayers:\n" ```.. playerCount .. "/" .. maxPlayers ..```
-                "\n\n📜 Teleport:\n" .. teleportScript
+    local teleportScript = `game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, "{game.JobId}", Players.LocalPlayer)`
+
+    local desc = table.concat({
+        `☁️ {eventName}`,
+        `🕒 Ends: <t:{endTime}:R>`,
+        "",
+        "Players:",
+        `{playerCount}/{maxPlayers}`,
+        "",
+        "📜 Teleport Back:",
+        teleportScript
+    }, "\n")
 
     SendSingleEmbed("🌦️ WEATHER EVENT", desc, 255, webhook, defaultImage)
 end)
