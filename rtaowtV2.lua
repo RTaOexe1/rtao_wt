@@ -132,38 +132,24 @@ DataStream.OnClientEvent:Connect(function(eventType, profile, data)
 end)
 
 -- ⛅ Weather Event Listener
+-- ⛅ Weather Event Listener
 WeatherEventStarted.OnClientEvent:Connect(function(eventName, duration)
-    local webhook = encodedWebhooks["__WEATHER__"]
-    if not webhook then return end
+    local webhook = encodedWebhooks["__WEATHER__"]
+    if not webhook then return end
 
-    local endTime = math.round(workspace:GetServerTimeNow()) + duration
-    local playerCount = #Players:GetPlayers()
-    local maxPlayers = Players.MaxPlayers
-    local jobId = game.JobId
+    local endTime = math.round(workspace:GetServerTimeNow()) + duration
+    local playerCount = #Players:GetPlayers()
+    local maxPlayers = Players.MaxPlayers
+    local jobId = game.JobId
+    local teleportScript = 'game:GetService("TeleportService"):TeleportToPlaceInstance(' .. game.PlaceId .. ', "' .. jobId .. '", Players.LocalPlayer)'
 
-    -- ใช้ single quote ภายนอก และ escape double quote ด้านใน
-    local teleportScript = [[game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, "]] .. jobId .. [[", Players.LocalPlayer)]]
+    local desc = "☁️ " .. eventName ..
+                "\n🕒 Ends: <t:" .. endTime .. ":R>" ..
+                "\n\nPlayers:\n" .. playerCount .. "/" .. maxPlayers ..
+                "\n\nJobid:\n" .. jobId ..
+                "\n\n📜 Teleport Back:\n" .. teleportScript
 
-    local descLines = {
-        "☁️ " .. eventName,
-        "🕒 Ends: <t:" .. endTime .. ":R>",
-        "",
-        "👥 Players:",
-        playerCount .. "/" .. maxPlayers,
-        "",
-        "🆔 JobId:",
-        jobId,
-        "",
-        "📜 Teleport Back:",
-        "```lua\n" .. teleportScript .. "\n```"
-    }
-
-    local desc = table.concat(descLines, "\n")
-
-    -- Debug ก่อนส่ง
-    print("[DEBUG] WEATHER DESC:\n" .. desc)
-
-    SendSingleEmbed("🌦️ WEATHER EVENT", desc, 255, webhook, defaultImage)
+    SendSingleEmbed("🌦️ WEATHER EVENT", desc, 255, webhook, defaultImage)
 end)
 
 -- UI Success Notification (optional)
