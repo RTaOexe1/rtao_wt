@@ -132,7 +132,6 @@ DataStream.OnClientEvent:Connect(function(eventType, profile, data)
 end)
 
 -- ⛅ Weather Event Listener
--- ⛅ Weather Event Listener
 WeatherEventStarted.OnClientEvent:Connect(function(eventName, duration)
     local webhook = encodedWebhooks["__WEATHER__"]
     if not webhook then return end
@@ -145,9 +144,8 @@ WeatherEventStarted.OnClientEvent:Connect(function(eventName, duration)
 
     local desc = "☁️ " .. eventName ..
                 "\n🕒 Ends: <t:" .. endTime .. ":R>" ..
-                "\n\nPlayers:\n" .. playerCount .. "/" .. maxPlayers ..
-                "\n\nJobid:\n" .. jobId ..
-                "\n\n📜 Teleport Back:\n" .. teleportScript
+                "\n\nPlayers:\n" ```.. playerCount .. "/" .. maxPlayers ..```
+                "\n\n📜 Teleport:\n" .. teleportScript
 
     SendSingleEmbed("🌦️ WEATHER EVENT", desc, 255, webhook, defaultImage)
 end)
