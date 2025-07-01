@@ -140,20 +140,20 @@ WeatherEventStarted.OnClientEvent:Connect(function(eventName, duration)
     local playerCount = #Players:GetPlayers()
     local maxPlayers = Players.MaxPlayers
 
-    local teleportScript = `game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, "{game.JobId}", Players.LocalPlayer)`
+    -- แก้เป็น string format ปกติ
+    local teleportScript = ("game:GetService(\"TeleportService\"):TeleportToPlaceInstance(game.PlaceId, \"%s\", Players.LocalPlayer)"):format(game.JobId)
 
     local desc = table.concat({
-    "☁️ " .. eventName,
-    "🕒 Ends: <t:" .. endTime .. ":R>",
-    "",
-    "Players:",
-    playerCount .. "/" .. maxPlayers,
-    "",
-    "📜 Teleport Back:",
-    "```\n" .. teleportScript .. "\n```"
-}, "\n")
+        "🕒 Ends: <t:" .. endTime .. ":R>",
+        "",
+        "Players:",
+        playerCount .. "/" .. maxPlayers,
+        "",
+        "📜 Teleport Back:",
+        "```lua\n" .. teleportScript .. "\n```"
+    }, "\n")
 
-    SendSingleEmbed("🌦️ WEATHER EVENT", desc, 255, webhook, defaultImage)
+    SendSingleEmbed("🌦️ WEATHER EVENT - " .. eventName, desc, 255, webhook, defaultImage)
 end)
 
 -- UI Success Notification (optional)
