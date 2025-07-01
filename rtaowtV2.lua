@@ -139,36 +139,34 @@ end)
 
 -- ⛅ Weather Event Listener (แก้ไขให้ส่ง fields แทน description)
 WeatherEventStarted.OnClientEvent:Connect(function(eventName, duration)
-    local webhook = encodedWebhooks["__WEATHER__"]
-    if not webhook then return end
+ local webhook = encodedWebhooks["__WEATHER__"]
+ if not webhook then return end
 
-    local endTime = math.round(workspace:GetServerTimeNow()) + duration
-    local playerCount = #Players:GetPlayers()
-    local maxPlayers = Players.MaxPlayers
+ local endTime = math.round(workspace:GetServerTimeNow()) + duration
+ local playerCount = #Players:GetPlayers()
+ local maxPlayers = Players.MaxPlayers
 
-    local teleportScript = ("game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, "%s", Players.LocalPlayer)"):format(game.JobId)
+ local teleportScript = ("game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, "%s", Players.LocalPlayer)"):format(game.JobId)
 
-    local fields = {
-        {
-            name = "🕒 Ends",
-            value = "<t:" .. endTime .. ":R>",
-            inline = true
-        },
-        {
-            name = "Players",
-            value = playerCount .. "/" .. maxPlayers,
-            inline = true
-        },
-        {
-            name = "📜 Teleport Back",
-            value = "```lua
-" .. teleportScript .. "
-```",
-            inline = false
-        }
-    }
+ local fields = {
+  {
+   name = "🕒 Ends",
+   value = "<t:" .. endTime .. ":R>",
+   inline = true
+  },
+  {
+   name = "Players",
+   value = playerCount .. "/" .. maxPlayers,
+   inline = true
+  },
+  {
+   name = "📜 Teleport Back",
+   value = "```lua\n" .. teleportScript .. "\n```",
+   inline = false
+  }
+ }
 
-    SendSingleEmbed("🌦️ WEATHER EVENT - " .. eventName, "", 255, webhook, defaultImage, fields)
+ SendSingleEmbed("🌦️ WEATHER EVENT - " .. eventName, "", 255, webhook, defaultImage, fields)
 end)
 
 -- UI Success Notification (optional)
