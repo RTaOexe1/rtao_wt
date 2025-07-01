@@ -151,12 +151,12 @@ WeatherEventStarted.OnClientEvent:Connect(function(eventName, duration)
 		"Players:",
 		playerCount .. "/" .. maxPlayers,
 		"",
-		"📜 Teleport Back:",
+		"📜 Teleport Server:",
 		"```lua\n" .. teleportScript .. "\n```"
 	}, "\n")
 
 	-- 👇 เปลี่ยนตรงนี้!
-	local title = "🌦️ WEATHER EVENT\n🌫️ " .. eventName
+	local title = "🌦️ WEATHER EVENT\n🌫️:  " .. eventName
 
 	SendSingleEmbed(title, desc, 255, webhook, defaultImage)
 end)
