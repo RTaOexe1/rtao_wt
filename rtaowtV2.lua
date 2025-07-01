@@ -133,27 +133,32 @@ end)
 
 -- ⛅ Weather Event Listener
 WeatherEventStarted.OnClientEvent:Connect(function(eventName, duration)
-    local webhook = encodedWebhooks["__WEATHER__"]
-    if not webhook then return end
+	local webhook = encodedWebhooks["__WEATHER__"]
+	if not webhook then return end
 
-    local endTime = math.round(workspace:GetServerTimeNow()) + duration
-    local playerCount = #Players:GetPlayers()
-    local maxPlayers = Players.MaxPlayers
+	local endTime = math.round(workspace:GetServerTimeNow()) + duration
+	local playerCount = #Players:GetPlayers()
+	local maxPlayers = Players.MaxPlayers
 
-    -- แก้เป็น string format ปกติ
-    local teleportScript = ("game:GetService(\"TeleportService\"):TeleportToPlaceInstance(game.PlaceId, \"%s\", Players.LocalPlayer)"):format(game.JobId)
+	local teleportScript = string.format(
+		"game:GetService(\"TeleportService\"):TeleportToPlaceInstance(game.PlaceId, \"%s\", Players.LocalPlayer)",
+		game.JobId
+	)
 
-    local desc = table.concat({
-        "🕒 Ends: <t:" .. endTime .. ":R>",
-        "",
-        "Players:",
-        playerCount .. "/" .. maxPlayers,
-        "",
-        "📜 Teleport Script:",
-        "```lua\n" .. teleportScript .. "\n```"
-    }, "\n")
+	local desc = table.concat({
+		"🕒 Ends: <t:" .. endTime .. ":R>",
+		"",
+		"Players:",
+		playerCount .. "/" .. maxPlayers,
+		"",
+		"📜 Teleport Back:",
+		"```lua\n" .. teleportScript .. "\n```"
+	}, "\n")
 
-    SendSingleEmbed("🌦️ WEATHER EVENT - " .. eventName, desc, 255, webhook, defaultImage)
+	-- 👇 เปลี่ยนตรงนี้!
+	local title = "🌦️ WEATHER EVENT\n🌫️ " .. eventName
+
+	SendSingleEmbed(title, desc, 255, webhook, defaultImage)
 end)
 
 -- UI Success Notification (optional)
