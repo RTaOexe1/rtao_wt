@@ -165,7 +165,7 @@ end)
 pcall(function()
 	game.StarterGui:SetCore("SendNotification", {
 		Title = "RTaO Webhook",
-		Text = "Stock + Weather Tracker Loaded",
+		Text = "RTaO Dev Stock + Weather Tracker Loaded✅",
 		Duration = 3,
 		Icon = "rbxassetid://70576862346242"
 	})
