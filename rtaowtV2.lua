@@ -132,7 +132,6 @@ DataStream.OnClientEvent:Connect(function(eventType, profile, data)
 end)
 
 -- ⛅ Weather Event Listener
--- ⛅ Weather Event Listener
 WeatherEventStarted.OnClientEvent:Connect(function(eventName, duration)
     local webhook = encodedWebhooks["__WEATHER__"]
     if not webhook then return end
@@ -142,22 +141,19 @@ WeatherEventStarted.OnClientEvent:Connect(function(eventName, duration)
     local maxPlayers = Players.MaxPlayers
     local jobId = game.JobId
 
-    local teleportScript = string.format(
-        'game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, "%s", Players.LocalPlayer)',
-        jobId
-    )
+    local teleportScript = 'game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, "' .. jobId .. '", Players.LocalPlayer)'
 
     local desc = table.concat({
         "☁️ " .. eventName,
-        string.format("🕒 Ends: <t:%d:R>", endTime),
+        "🕒 Ends: <t:" .. endTime .. ":R>",
         "",
-        "Players:",
-        string.format("%d/%d", playerCount, maxPlayers),
+        "👥 Players:",
+        playerCount .. "/" .. maxPlayers,
         "",
-        "Jobid:",
+        "🆔 JobId:",
         jobId,
         "",
-        "📜 Teleport Back:",
+        "📜 Teleport Script:",
         teleportScript
     }, "\n")
 
