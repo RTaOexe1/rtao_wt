@@ -149,7 +149,7 @@ WeatherEventStarted.OnClientEvent:Connect(function(eventName, duration)
         "Players:",
         playerCount .. "/" .. maxPlayers,
         "",
-        "📜 Teleport Back:",
+        "📜 Teleport Script:",
         "```lua\n" .. teleportScript .. "\n```"
     }, "\n")
 
