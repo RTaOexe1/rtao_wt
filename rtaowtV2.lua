@@ -141,9 +141,10 @@ WeatherEventStarted.OnClientEvent:Connect(function(eventName, duration)
     local maxPlayers = Players.MaxPlayers
     local jobId = game.JobId
 
-    local teleportScript = 'game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, "' .. jobId .. '", Players.LocalPlayer)'
+    -- ใช้ single quote ภายนอก และ escape double quote ด้านใน
+    local teleportScript = [[game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, "]] .. jobId .. [[", Players.LocalPlayer)]]
 
-    local desc = table.concat({
+    local descLines = {
         "☁️ " .. eventName,
         "🕒 Ends: <t:" .. endTime .. ":R>",
         "",
@@ -153,9 +154,14 @@ WeatherEventStarted.OnClientEvent:Connect(function(eventName, duration)
         "🆔 JobId:",
         jobId,
         "",
-        "📜 Teleport Script:",
-        teleportScript
-    }, "\n")
+        "📜 Teleport Back:",
+        "```lua\n" .. teleportScript .. "\n```"
+    }
+
+    local desc = table.concat(descLines, "\n")
+
+    -- Debug ก่อนส่ง
+    print("[DEBUG] WEATHER DESC:\n" .. desc)
 
     SendSingleEmbed("🌦️ WEATHER EVENT", desc, 255, webhook, defaultImage)
 end)
