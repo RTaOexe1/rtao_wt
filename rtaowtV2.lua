@@ -134,13 +134,34 @@ end)
 -- ⛅ Weather Event Listener
 -- ⛅ Weather Event Listener
 WeatherEventStarted.OnClientEvent:Connect(function(eventName, duration)
-    local webhook = encodedWebhooks["__WEATHER__"]
-    if not webhook then return end
+    local webhook = encodedWebhooks["__WEATHER__"]
+    if not webhook then return end
 
-    local endTime = math.round(workspace:GetServerTimeNow()) + duration
-    local desc = string.format("☁️ **%s**\n🕒 Ends: <t:%d:R>", eventName, endTime)
+    local endTime = math.round(workspace:GetServerTimeNow()) + duration
+    local playerCount = #Players:GetPlayers()
+    local maxPlayers = Players.MaxPlayers
+    local jobId = game.JobId
 
-    SendSingleEmbed("🌦️ WEATHER EVENT", desc, 255, webhook, defaultImage)
+    local teleportScript = string.format(
+        'game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, "%s", Players.LocalPlayer)',
+        jobId
+    )
+
+    local desc = table.concat({
+        "☁️ " .. eventName,
+        string.format("🕒 Ends: <t:%d:R>", endTime),
+        "",
+        "Players:",
+        string.format("%d/%d", playerCount, maxPlayers),
+        "",
+        "Jobid:",
+        jobId,
+        "",
+        "📜 Teleport Back:",
+        teleportScript
+    }, "\n")
+
+    SendSingleEmbed("🌦️ WEATHER EVENT", desc, 255, webhook, defaultImage)
 end)
 
 -- UI Success Notification (optional)
