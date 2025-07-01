@@ -132,13 +132,15 @@ DataStream.OnClientEvent:Connect(function(eventType, profile, data)
 end)
 
 -- ⛅ Weather Event Listener
+-- ⛅ Weather Event Listener
 WeatherEventStarted.OnClientEvent:Connect(function(eventName, duration)
-	local webhook = encodedWebhooks["__WEATHER__"]
-	if not webhook then return end
+    local webhook = encodedWebhooks["__WEATHER__"]
+    if not webhook then return end
 
-	local endTime = math.round(workspace:GetServerTimeNow()) + duration
-	local desc = `☁️ **{eventName}**\n🕒 Ends: <t:{endTime}:R>`
-	SendSingleEmbed("🌦️ WEATHER EVENT", desc, 255, webhook, defaultImage)
+    local endTime = math.round(workspace:GetServerTimeNow()) + duration
+    local desc = string.format("☁️ **%s**\n🕒 Ends: <t:%d:R>", eventName, endTime)
+
+    SendSingleEmbed("🌦️ WEATHER EVENT", desc, 255, webhook, defaultImage)
 end)
 
 -- UI Success Notification (optional)
