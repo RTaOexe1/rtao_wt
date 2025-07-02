@@ -291,6 +291,6 @@ pcall(function()
 		Title = "RTaO Webhook",
 		Text = "RTaO Dev Stock + Weather Tracker Loaded ✅",
 		Duration = 3,
-		Icon = "rbxassetid://70576862346242"
+		Icon = "rbxassetid://6023426926"
 	})
 end)
