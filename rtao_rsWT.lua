@@ -275,7 +275,7 @@ local function SendWeatherEmbed(eventName, duration)
 		"• " .. table.concat(data.effects, "\n• ")
 	}, "\n")
 
-	local title = "🌦️ WEATHER EVENT\n" .. data.emoji .. " " .. eventName
+	local title = "🌦️ WEATHER EVENT\n\n" .. data.emoji .. " " .. eventName
 
 	SendSingleEmbed(title, desc, 255, webhook, defaultImage)
 end
