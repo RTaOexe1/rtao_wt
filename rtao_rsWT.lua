@@ -166,14 +166,14 @@ local weatherEffects = {
 			"6 crops become Moonlit per night."
 		}
 	},
-	["Blood Moon"] = {
+	["BloodMoon"] = {
 		emoji = "🎑",
 		effects = {
 			"Gives crops a glowing red hue.",
 			"Chance to apply Bloodlit."
 		}
 	},
-	["Meteor Shower"] = {
+	["MeteorShower"] = {
 		emoji = "🌠",
 		effects = {
 			"Meteors fall from the sky.",
@@ -200,14 +200,14 @@ local weatherEffects = {
 			"Gives crops the Twisted mutation."
 		}
 	},
-	["Aurora Borealis"] = {
+	["AuroraBorealis"] = {
 		emoji = "🌆",
 		effects = {
 			"Gives the Aurora mutation.",
 			"Increases growth speed by 50%."
 		}
 	},
-	["Tropical Rain"] = {
+	["TropicalRain"] = {
 		emoji = "☔️",
 		effects = {
 			"Gives +50% Grow Speed, & crops the Drenched mutation."
@@ -219,14 +219,14 @@ local weatherEffects = {
 			"May possibly give Wiltproof mutation, details unavailable."
 		}
 	},
-	["Bee Swarm"] = {
+	["BeeSwarm"] = {
 		emoji = "🐝",
 		effects = {
 			"Spawns bees that generate Pollinated Mutations or exchange for Honey.",
 			"Lasts 10 minutes."
 		}
 	},
-	["Working Bee Swarm"] = {
+	["WorkingBeeSwarm"] = {
 		emoji = "🐝",
 		effects = {
 			"Spawns bees that generate Pollinated Mutations with x10 Speed Craft.",
@@ -234,20 +234,20 @@ local weatherEffects = {
 			"Lasts 10 minutes."
 		}
 	},
-	["Mega Harvest"] = {
+	["MegaHarvest"] = {
 		emoji = "⛏️",
 		effects = {
 			"Grants 2x Harvest Points and growth speed."
 		}
 	},
-	["Sun God"] = {
+	["SunGod"] = {
 		emoji = "🌞",
 		effects = {
 			"Applies Dawnbound mutation to sunflowers near Sun God.",
 			"Speeds up growth of Sunflower."
 		}
 	},
-	["Heat Wave"] = {
+	["HeatWave"] = {
 		emoji = "🌅",
 		effects = {
 			"Applies the Sundried mutation to crops."
