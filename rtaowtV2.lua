@@ -140,20 +140,26 @@ WeatherEventStarted.OnClientEvent:Connect(function(eventName, duration)
 	local playerCount = #Players:GetPlayers()
 	local maxPlayers = Players.MaxPlayers
 
-	local teleportScript = string.format(
-		"game:GetService(\"TeleportService\"):TeleportToPlaceInstance(game.PlaceId, \"%s\", Players.LocalPlayer)",
-		game.JobId
-	)
+	local weatherEffects = {
+	["Sunny"] = "☀️ Plant growth rate increased",
+	["Windy"] = "🌫️ Projectile speed increased",
+	["Rainy"] = "🌧️ Seeds are automatically watered",
+	["Snowy"] = "❄️ Movement slower, crops preserved",
+	["Stormy"] = "🌪️ Random lightning; crops at risk",
+	["Rainbow"] = "🌈 Double harvest chance",
+}
 
-	local desc = table.concat({
-		"🕒 Ends: <t:" .. endTime .. ":R>",
-		"",
-		"Players:",
-		playerCount .. "/" .. maxPlayers,
-		"",
-		"📜 Teleport Server:",
-		"```lua\n" .. teleportScript .. "\n```"
-	}, "\n")
+local effect = weatherEffects[eventName] or "No effect information"
+
+local desc = table.concat({
+	"🕒 Ends: <t:" .. endTime .. ":R>",
+	"",
+	"Players:",
+	playerCount .. "/" .. maxPlayers,
+	"",
+	"📈 Effect:",
+	effect
+}, "\n")
 
 	-- 👇 เปลี่ยนตรงนี้!
 	local title = "🌦️ WEATHER EVENT\n🌫️:  " .. eventName
