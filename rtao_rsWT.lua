@@ -83,7 +83,7 @@ local function SendSingleEmbed(title, bodyText, color, encodedWebhook, imageUrl)
 		description = bodyText,
 		color = color,
 		timestamp = DateTime.now():ToIsoDate(),
-		footer = { text = "RTaO Stock Tracker" }
+		footer = { text = "RTaO Dev Stock Tracker" }
 	}
 
 	if imageUrl then
@@ -289,7 +289,7 @@ end)
 pcall(function()
 	game.StarterGui:SetCore("SendNotification", {
 		Title = "RTaO Webhook",
-		Text = "Stock + Weather Tracker Loaded ✅",
+		Text = "RTaO Dev Stock + Weather Tracker Loaded ✅",
 		Duration = 3,
 		Icon = "rbxassetid://70576862346242"
 	})
