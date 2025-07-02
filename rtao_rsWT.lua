@@ -26,7 +26,7 @@ end
 
 -- Webhooks
 local encodedWebhooks = {
-	["__WEATHER__"] = "<BASE64_WEBHOOK_HERE>"
+	["__WEATHER__"] = "aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTM4OTI2NDA2MDgwMDgzMTU0OS9MbkEzdktvOGstNkpRb0ZOcWRRbXA0bDVfSUlQdWNpMC1kdUtQU0RhMm0xM2ZsWW96REJVNWdEVERrSDI3cTNSaVoyUw=="
 }
 
 -- Settings
@@ -217,7 +217,7 @@ end)
 pcall(function()
 	game.StarterGui:SetCore("SendNotification", {
 		Title = "RTaO Webhook",
-		Text = "Weather Tracker Loaded ✅",
+		Text = "RTaO Dev Weather Tracker Loaded ✅",
 		Duration = 3,
 		Icon = "rbxassetid://70576862346242"
 	})
