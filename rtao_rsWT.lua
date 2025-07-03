@@ -40,8 +40,13 @@ _G.Layout = {
 	["ROOT/PetEggStock/Stocks"] = { title = "🥚 EGG STOCK", color = 16776960 },
 	["ROOT/GearStock/Stocks"] = { title = "🛠️ GEAR STOCK", color = 16753920 },
 	["ROOT/CosmeticStock/ItemStocks"] = { title = "🎨 COSMETIC STOCK", color = 16737792 },
-	["ROOT/EventShopStock/Stocks"] = { title = "🎁 EVENT STOCK", color = 10027263 }
+	["ROOT/EventShopStock/Stocks"] = { title = "🏱 EVENT STOCK", color = 65535 }
 }
+
+-- เพิ่มเส้นล่างด้วย character
+local function AddUnderline()
+	return "\n\n<:__line:1178491484309504042>"
+end
 
 -- Settings
 local defaultImage = "https://cdn.discordapp.com/attachments/1217027368825262144/1388582267881914568/1717516914963.png"
@@ -70,8 +75,9 @@ local function GetStockString(stock)
 		local display = data.EggName or name
 		s ..= (`{display} x{data.Stock}\n`)
 	end
-	return s
+	return s .. AddUnderline()
 end
+
 
 -- Send Webhook (Single Embed)
 local function SendSingleEmbed(title, bodyText, color, encodedWebhook, imageUrl)
