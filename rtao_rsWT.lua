@@ -248,7 +248,7 @@ local weatherEffects = {
 		}
 	},
 	["Sandstorm"] = {
-		emoji = "🏖️",
+		emoji = "🏜️",
 		effects = {
 			"Gives the Sandy mutation.",
 			"Can combine with Sundried or Burnt to create Ceramic."
