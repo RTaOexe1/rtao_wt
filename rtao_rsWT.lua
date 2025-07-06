@@ -255,7 +255,7 @@ local weatherEffects = {
 			"Can combine with Wet to create Clay."
 		}
 	},
-	["HeatWave"] = {
+	["Heatwave"] = {
 		emoji = "🌅",
 		effects = {
 			"Applies the Sundried mutation to crops."
