@@ -247,6 +247,14 @@ local weatherEffects = {
 			"Speeds up growth of Sunflower."
 		}
 	},
+	["Sandstorm"] = {
+		emoji = "🏖️",
+		effects = {
+			"Gives the Sandy mutation.",
+			"Can combine with Sundried or Burnt to create Ceramic."
+			"Can combine with Wet to create Clay."
+		}
+	},
 	["HeatWave"] = {
 		emoji = "🌅",
 		effects = {
