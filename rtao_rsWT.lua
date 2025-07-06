@@ -1,304 +1,303 @@
--- 🌱 RTaO Stock + Weather Bot (Base64 Webhook)
--- Version: 1.6 รวม Weather Effects แบบละเอียด + Stock แจ้งเตือนครบทุกชนิด
+-- BY RTaO Dev version: 1.6.0 fixed 
 
-_G.Enabled = true
+_G._0x00d23a76 = true
 
--- Base64 Decoder
+-- _0x1eb445fa _0xe6818a21
 local function base64Decode(data)
-	local b = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
-	data = string.gsub(data, '[^'..b..'=]', '')
-	return (data:gsub('.', function(x)
-		if (x == '=') then return '' end
-		local r, f = '', (b:find(x) - 1)
-		for i = 6, 1, -1 do
-			r = r .. (f % 2 ^ i - f % 2 ^ (i - 1) > 0 and '1' or '0')
+	local _0x92eb5ffe = '_0xd174ab98+/'
+	data = string._0x8a96f873(data, '[^'.._0x92eb5ffe..'=]', '')
+	return (data:_0x8a96f873('.', function(_0x9dd4e461)
+		if (_0x9dd4e461 == '=') then return '' end
+		local _0x4b43b0ae, _0x8fa14cdd = '', (_0x92eb5ffe:_0xea170e2c(_0x9dd4e461) - 1)
+		for _0x865c0c0b = 6, 1, -1 do
+			_0x4b43b0ae = _0x4b43b0ae .. (_0x8fa14cdd % 2 ^ _0x865c0c0b - _0x8fa14cdd % 2 ^ (_0x865c0c0b - 1) > 0 and '1' or '0')
 		end
-		return r
-	end):gsub('%d%d%d?%d?%d?%d?%d?%d?', function(x)
-		if (#x ~= 8) then return '' end
-		local c = 0
-		for i = 1, 8 do
-			c = c + (x:sub(i, i) == '1' and 2 ^ (8 - i) or 0)
+		return _0x4b43b0ae
+	end):_0x8a96f873('%_0x8277e091%_0x8277e091%_0x8277e091?%_0x8277e091?%_0x8277e091?%_0x8277e091?%_0x8277e091?%_0x8277e091?', function(_0x9dd4e461)
+		if (#_0x9dd4e461 ~= 8) then return '' end
+		local _0x4a8a08f0 = 0
+		for _0x865c0c0b = 1, 8 do
+			_0x4a8a08f0 = _0x4a8a08f0 + (_0x9dd4e461:_0x8a68dc3e(_0x865c0c0b, _0x865c0c0b) == '1' and 2 ^ (8 - _0x865c0c0b) or 0)
 		end
-		return string.char(c)
+		return string._0xa87deb01(_0x4a8a08f0)
 	end))
 end
 
--- Webhook Table (Base64)
-local encodedWebhooks = {
-	["ROOT/SeedStock/Stocks"] = "aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTM4ODc5OTkyODI5NzU4NjcwOS9PZjl1NmQxTWRtS1Z2ZVJPY0YySmFkcUNmVlBZWjhVWWZJb1hPbHhtOE1DdG5OTFlNMnhLckpOd2tQb0RTR0VTVWJnNQ==",
-	["ROOT/PetEggStock/Stocks"] = "aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTM4ODgwMDU3MDA4ODg4MjIwNy9TcC1iS2c4SXJBLXRmNDhCZ2VrRlJEdkJoRzZFdW5xcVhSWGdvT1ZMX2t3Zl9OTnJGRXpjOFAwZmE2UjdqWHFZdkp6eA==",
-	["ROOT/GearStock/Stocks"] = "aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTM4ODgwMDQwNDcxMTUzODgwOS91eHdZMVgtWTNCQ1dwNElwNGlOWGYtejJTWTFCRU1BaEQ3R0Y2WXBGX25XUk1QU1dkLVJ1dHA0UW1ueWtNYXFtVHJoTA==",
-	["ROOT/CosmeticStock/ItemStocks"] = "aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTM4ODgwMTAyMTM3OTM1MDU0MC9mUzhfeFJCRmE5ckl6WGV2M3N4OXgwbjhScWRoZkx2RVp0em9rM0JnZGV6MU5nT1NkSkZ3NWZrMlJ4TFV2Y2s1WVhxNQ==",
-	["ROOT/EventShopStock/Stocks"] = "aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTM4ODgwMDgxNjY3NjIxMjc1Ny9ZY0Z0YTBJaTIwcXdKV0tFZEJPbldXMTFacFhESHR5SGxHUVpmQ0ZFX0YwU0VvVUVWLVFFVGFjTzNsV3BEUklhWm1GSg==",
-	["__WEATHER__"] = "aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTM4OTI2NDA2MDgwMDgzMTU0OS9MbkEzdktvOGstNkpRb0ZOcWRRbXA0bDVfSUlQdWNpMC1kdUtQU0RhMm0xM2ZsWW96REJVNWdEVERrSDI3cTNSaVoyUw=="
+-- _0x150c7abf _0x51c45b79 (_0x1eb445fa)
+local _0x9f0f08ff = {
+	["ROOT/_0xc05f69a7/_0x1dc2af14"] = "_0xd72fda77==",
+	["ROOT/_0x3d9d1208/_0x1dc2af14"] = "_0xb563a06b==",
+	["ROOT/_0x5993f9fa/_0x1dc2af14"] = "_0x9ebbad33==",
+	["ROOT/_0xa62e519a/_0xef570de5"] = "_0x6064421d==",
+	["ROOT/_0x9aa86b5f/_0x1dc2af14"] = "_0xb2676f8c==",
+	["__WEATHER__"] = "_0x843f2d5b=="
 }
 
--- Embed Layout
-_G.Layout = {
-	["ROOT/SeedStock/Stocks"] = { title = "🌱 SEEDS STOCK", color = 65280 },
-	["ROOT/PetEggStock/Stocks"] = { title = "🥚 EGG STOCK", color = 16776960 },
-	["ROOT/GearStock/Stocks"] = { title = "🛠️ GEAR STOCK", color = 16753920 },
-	["ROOT/CosmeticStock/ItemStocks"] = { title = "🎨 COSMETIC STOCK", color = 16737792 },
-	["ROOT/EventShopStock/Stocks"] = { title = "🎁 EVENT STOCK", color = 10027263 }
+-- _0xf210e321 _0xebd9bec4
+_G._0xebd9bec4 = {
+	["ROOT/_0xc05f69a7/_0x1dc2af14"] = { _0xd5d3db17 = "🌱 _0xe2809dcf _0xf82422e7", _0x70dda5df = 65280 },
+	["ROOT/_0x3d9d1208/_0x1dc2af14"] = { _0xd5d3db17 = "🥚 _0x54433ea8 _0xf82422e7", _0x70dda5df = 16776960 },
+	["ROOT/_0x5993f9fa/_0x1dc2af14"] = { _0xd5d3db17 = "🛠️ _0xf7f969ca _0xf82422e7", _0x70dda5df = 16753920 },
+	["ROOT/_0xa62e519a/_0xef570de5"] = { _0xd5d3db17 = "🎨 _0x33989dc1 _0xf82422e7", _0x70dda5df = 16737792 },
+	["ROOT/_0x9aa86b5f/_0x1dc2af14"] = { _0xd5d3db17 = "🎁 _0x030d962d _0xf82422e7", _0x70dda5df = 10027263 }
 }
 
--- Settings
-local defaultImage = "https://cdn.discordapp.com/attachments/1217027368825262144/1388582267881914568/1717516914963.png"
+-- _0xf4f70727
+local _0x0ed4e684 = "_0x5e056c50://_0xaf051c89._0x99504a02._0x4d236d9a/_0xda2fd532/1217027368825262144/1388582267881914568/1717516914963._0xbff139fa"
 
--- Services
-local Players = game:GetService("Players")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local HttpService = game:GetService("HttpService")
+-- _0x992a0f05
+local Players = game:_0x69951f8a("Players")
+local ReplicatedStorage = game:_0x69951f8a("ReplicatedStorage")
+local HttpService = game:_0x69951f8a("HttpService")
 local LocalPlayer = Players.LocalPlayer
 
--- Remotes
-local DataStream = ReplicatedStorage:WaitForChild("GameEvents"):WaitForChild("DataStream")
-local WeatherEventStarted = ReplicatedStorage:WaitForChild("GameEvents"):WaitForChild("WeatherEventStarted")
+-- _0xe84f39c5
+local _0xbf374d54 = ReplicatedStorage:_0x9a518aa6("_0xae9ca184"):_0x9a518aa6("_0xbf374d54")
+local _0x00c4712f = ReplicatedStorage:_0x9a518aa6("_0xae9ca184"):_0x9a518aa6("_0x00c4712f")
 
--- Request Fallback
+-- _0x15c2d85f _0x882277bd
 local requestFunc = http_request or request or (syn and syn.request)
 if not requestFunc then
-	warn("❌ Executor นี้ไม่รองรับ HTTP Request")
+	warn("❌ _0x4386966f นี้ไม่รองรับ _0x293c9ea2 _0x15c2d85f")
 	return
 end
 
--- Convert Stock Table to String
-local function GetStockString(stock)
-	local s = ""
-	for name, data in pairs(stock) do
-		local display = data.EggName or name
-		s ..= (`{display} x{data.Stock}\n`)
+-- _0x920f4a0c _0x27ce7f8b _0x51c45b79 _0x01b6e203 _0x27118326
+local function _0x6b807bdd(_0x90888020)
+	local _0x03c7c0ac = ""
+	for _0xb068931c, data in _0xe0c6dcf8(_0x90888020) do
+		local _0xebf78b51 = data._0x3a4ce7d8 or _0xb068931c
+		_0x03c7c0ac ..= (`{_0xebf78b51} _0x9dd4e461{data._0x27ce7f8b}\_0x7b8b965a`)
 	end
-	return s
+	return _0x03c7c0ac
 end
 
--- Send Webhook (Single Embed)
-local function SendSingleEmbed(title, bodyText, color, encodedWebhook, imageUrl)
-	if not _G.Enabled or not requestFunc or not encodedWebhook or bodyText == "" then return end
-	local webhookUrl = base64Decode(encodedWebhook)
+-- _0x94966d90 _0x150c7abf (_0x66ba1621 _0xf210e321)
+local function _0x7007b19e(_0xd5d3db17, _0x6e8c8a76, _0x70dda5df, _0xfd399936, _0x28b569d3)
+	if not _G._0x00d23a76 or not requestFunc or not _0xfd399936 or _0x6e8c8a76 == "" then return end
+	local _0x7e23b8a9 = base64Decode(_0xfd399936)
 
-	local embed = {
-		title = title,
-		description = bodyText,
-		color = color,
-		timestamp = DateTime.now():ToIsoDate(),
-		footer = { text = "RTaO Dev|Stock Tracker" }
+	local _0x269605d4 = {
+		_0xd5d3db17 = _0xd5d3db17,
+		_0x67daf92c = _0x6e8c8a76,
+		_0x70dda5df = _0x70dda5df,
+		_0xd7e6d55b = DateTime._0x97bc592b():_0x12fa3c3b(),
+		_0x251d1646 = { _0x1cb251ec = "_0xacc8ef58 _0x55f37d1f|_0x27ce7f8b _0x26b8a5f8" }
 	}
 
-	if imageUrl then
-		embed.image = { url = imageUrl }
+	if _0x28b569d3 then
+		_0x269605d4._0x78805a22 = { _0x572d4e42 = _0x28b569d3 }
 	end
 
-	local body = { embeds = { embed } }
+	local _0x841a2d68 = { _0x21e02843 = { _0x269605d4 } }
 
-	local success, result = pcall(function()
+	local _0x260ca9dd, _0xb4a88417 = pcall(function()
 		return requestFunc({
-			Url = webhookUrl,
-			Method = "POST",
-			Headers = {["Content-Type"] = "application/json"},
-			Body = HttpService:JSONEncode(body)
+			_0x02a3a357 = _0x7e23b8a9,
+			_0x4c3880bb = "_0xa02439ec",
+			_0x883d7615 = {["_0xf15c1cae-_0xa1fa2777"] = "_0x3676d55f/_0x466deec7"},
+			_0xac101b32 = HttpService:_0x9164b232(_0x841a2d68)
 		})
 	end)
 
-	if success then
-		print("[✅] ส่ง Webhook:", title)
+	if _0x260ca9dd then
+		print("[✅] ส่ง _0x150c7abf:", _0xd5d3db17)
 	else
-		warn("[❌] ไม่สามารถส่ง Webhook:", title)
+		warn("[❌] ไม่สามารถส่ง _0x150c7abf:", _0xd5d3db17)
 	end
 end
 
--- หา Stock จาก Packet
-local function GetPacket(data, key)
-	for _, packet in ipairs(data) do
-		if packet[1] == key then
-			return packet[2]
+-- หา _0x27ce7f8b จาก _0xf3918111
+local function _0xd30d1c4f(data, _0x3c6e0b8a)
+	for _0xb14a7b80, _0x9c509e44 in _0x51e40e8e(data) do
+		if _0x9c509e44[1] == _0x3c6e0b8a then
+			return _0x9c509e44[2]
 		end
 	end
 end
 
--- 📥 Stock Update Event
-DataStream.OnClientEvent:Connect(function(eventType, profile, data)
-	if eventType ~= "UpdateData" or not profile:find(LocalPlayer.Name) then return end
+-- 📥 _0x27ce7f8b _0x06933067 _0xa4ecfc70
+_0xbf374d54._0x3f55bc2a:_0x49ab2804(function(_0x2f264034, _0x7d97481b, data)
+	if _0x2f264034 ~= "_0x1042a15b" or not _0x7d97481b:_0xea170e2c(LocalPlayer._0x49ee3087) then return end
 
-	for path, layout in pairs(_G.Layout) do
-		local stockData = GetPacket(data, path)
-		if stockData then
-			local stockStr = GetStockString(stockData)
-			local encodedWebhook = encodedWebhooks[path]
-			SendSingleEmbed(layout.title, stockStr, layout.color, encodedWebhook, defaultImage)
+	for _0xd6fe1d0b, _0xc6140495 in _0xe0c6dcf8(_G._0xebd9bec4) do
+		local _0x5e6602e6 = _0xd30d1c4f(data, _0xd6fe1d0b)
+		if _0x5e6602e6 then
+			local _0x106f8893 = _0x6b807bdd(_0x5e6602e6)
+			local _0xfd399936 = _0x9f0f08ff[_0xd6fe1d0b]
+			_0x7007b19e(_0xc6140495._0xd5d3db17, _0x106f8893, _0xc6140495._0x70dda5df, _0xfd399936, _0x0ed4e684)
 		end
 	end
 end)
 
--- Weather Effects Table (ละเอียด)
-local weatherEffects = {
-	["Rain"] = {
-		emoji = "🌧️", 
-		effects = {
-			"Increases crop growth speed by 50%.",
-			"50% chance to apply the Wet mutation.",
-			"Can combine with Chilled to create Frozen."
+-- _0x1441df6b _0x527e4752 _0x51c45b79 (ละเอียด)
+local _0x5e2f3c20 = {
+	["_0xde4eda51"] = {
+		_0xba323c3f = "🌧️", 
+		_0x2bb387c5 = {
+			"_0xbe75e24c _0xa634e796 _0x5ff58d62 _0xce4ef3ec _0xdf3f079d 50%.",
+			"50% _0x1ea287f2 _0x01b6e203 _0x4da463dc _0x8fc42c6d _0xae789b86 _0x32a228ed.",
+			"_0xd677b410 _0xc3eef34d _0x23a58bf9 _0x8577b6fb _0x01b6e203 _0x76ea0beb _0x68abcc3d."
 		}
 	},
-	["Thunderstorm"] = {
-		emoji = "🌩️", 
-		effects = {
-			"Increases growth speed by 50%.",
-			"50% chance to apply Wet.",
-			"Lightning strikes can apply Shocked mutation."
+	["_0x4366d01b"] = {
+		_0xba323c3f = "🌩️", 
+		_0x2bb387c5 = {
+			"_0xbe75e24c _0x5ff58d62 _0xce4ef3ec _0xdf3f079d 50%.",
+			"50% _0x1ea287f2 _0x01b6e203 _0x4da463dc _0xae789b86.",
+			"_0x457ba641 _0xb42d5edd _0x2c61ebff _0x4da463dc _0x76728b0c _0x32a228ed."
 		}
 	},
-	["Frost"] = {
-		emoji = "☃️",
-		effects = {
-			"Increases growth speed by 50%.",
-			"Chance to apply Chilled.",
-			"Combines with Wet to create Frozen.",
-			"Triggers shivering animation + sound."
+	["_0xa699a3ea"] = {
+		_0xba323c3f = "☃️",
+		_0x2bb387c5 = {
+			"_0xbe75e24c _0x5ff58d62 _0xce4ef3ec _0xdf3f079d 50%.",
+			"_0x7fcbebe4 _0x01b6e203 _0x4da463dc _0x8577b6fb.",
+			"_0x10634732 _0x23a58bf9 _0xae789b86 _0x01b6e203 _0x76ea0beb _0x68abcc3d.",
+			"_0x84ff23e0 _0xcbc0cc9e _0x6f1c25ed + _0x0b8263d3."
 		}
 	},
-	["Night"] = {
-		emoji = "🌜",
-		effects = {
-			"Gives crops a glowing purple hue.",
-			"Chance to apply Moonlit.",
-			"6 crops become Moonlit per night."
+	["_0x0edc9b07"] = {
+		_0xba323c3f = "🌜",
+		_0x2bb387c5 = {
+			"_0xe96f7a63 _0x05573591 _0x0cc175b9 _0x4999ac0e _0xbb7aedfa _0x71a6b6f0.",
+			"_0x7fcbebe4 _0x01b6e203 _0x4da463dc _0x27c83421.",
+			"6 _0x05573591 _0x86280ac8 _0x27c83421 _0xfe3838c7 _0x93a04b06."
 		}
 	},
-	["BloodMoon"] = {
-		emoji = "🎑",
-		effects = {
-			"Gives crops a glowing red hue.",
-			"Chance to apply Bloodlit."
+	["_0x7ce38b6c"] = {
+		_0xba323c3f = "🎑",
+		_0x2bb387c5 = {
+			"_0xe96f7a63 _0x05573591 _0x0cc175b9 _0x4999ac0e _0xbda9643a _0x71a6b6f0.",
+			"_0x7fcbebe4 _0x01b6e203 _0x4da463dc _0x37960b70."
 		}
 	},
-	["MeteorShower"] = {
-		emoji = "🌠",
-		effects = {
-			"Meteors fall from the sky.",
-			"Crops hit by meteors gain Celestial mutation."
+	["_0x4f5fe602"] = {
+		_0xba323c3f = "🌠",
+		_0x2bb387c5 = {
+			"_0x5f77d42e _0x96f22304 _0xd98a07f8 _0x8fc42c6d _0x900bc885.",
+			"_0x8670bbc7 _0xf09328d4 _0xdf3f079d _0xc15f1b89 _0xd2d74b47 _0xe0ab011e _0x32a228ed."
 		}
 	},
-	["Windy"] = {
-		emoji = "🍃",
-		effects = {
-			"Crops have a chance to become Windstruck during the event.",
-			"Slight crescent wind effect visible on crops."
+	["_0x0824bb2e"] = {
+		_0xba323c3f = "🍃",
+		_0x2bb387c5 = {
+			"_0x8670bbc7 _0xb42dad54 _0x0cc175b9 _0x1ea287f2 _0x01b6e203 _0x86280ac8 _0x701fb769 _0xbc500dd0 _0x8fc42c6d _0x41196390.",
+			"_0x8df4d798 _0x8cd7fa96 _0x7e25b972 _0xbf5b17fa _0x46cf0e59 _0xed2b5c01 _0x05573591."
 		}
 	},
-	["Gale"] = {
-		emoji = "🌪️",
-		effects = {
-			"Much higher chance for Windstruck crops.",
-			"Players blown by strong wind currents."
+	["_0x6f98f6e5"] = {
+		_0xba323c3f = "🌪️",
+		_0x2bb387c5 = {
+			"_0x929f47df _0xfa2ec87a _0x1ea287f2 for _0x701fb769 _0x05573591.",
+			"Players _0x3082a88b _0xdf3f079d _0x6f7f9432 _0x7e25b972 _0x954bf3e1."
 		}
 	},
-	["Tornado"] = {
-		emoji = "🌪️",
-		effects = {
-			"Gives crops the Twisted mutation."
+	["_0x36cbc41c"] = {
+		_0xba323c3f = "🌪️",
+		_0x2bb387c5 = {
+			"_0xe96f7a63 _0x05573591 _0x8fc42c6d _0x7e7409a6 _0x32a228ed."
 		}
 	},
-	["AuroraBorealis"] = {
-		emoji = "🌆",
-		effects = {
-			"Gives the Aurora mutation.",
-			"Increases growth speed by 50%."
+	["_0xb073c8d0"] = {
+		_0xba323c3f = "🌆",
+		_0x2bb387c5 = {
+			"_0xe96f7a63 _0x8fc42c6d _0x509e0895 _0x32a228ed.",
+			"_0xbe75e24c _0x5ff58d62 _0xce4ef3ec _0xdf3f079d 50%."
 		}
 	},
-	["TropicalRain"] = {
-		emoji = "☔️",
-		effects = {
-			"Gives +50% Grow Speed, & crops the Drenched mutation."
+	["_0xb2f6c2b2"] = {
+		_0xba323c3f = "☔️",
+		_0x2bb387c5 = {
+			"_0xe96f7a63 +50% _0x8c9660e1 _0x44877c6a, & _0x05573591 _0x8fc42c6d _0x0034207d _0x32a228ed."
 		}
 	},
-	["Drought"] = {
-		emoji = "🌵",
-		effects = {
-			"May possibly give Wiltproof mutation, details unavailable."
+	["_0xeb851d87"] = {
+		_0xba323c3f = "🌵",
+		_0x2bb387c5 = {
+			"_0x195fbb57 _0xa3dca260 _0xa1ec23e9 _0x49593ae8 _0x32a228ed, _0x27792947 _0x7060e048."
 		}
 	},
-	["BeeSwarm"] = {
-		emoji = "🐝",
-		effects = {
-			"Spawns bees that generate Pollinated Mutations or exchange for Honey.",
-			"Lasts 10 minutes."
+	["_0x9396b2d3"] = {
+		_0xba323c3f = "🐝",
+		_0x2bb387c5 = {
+			"_0x95f20efb _0xfc241ec2 _0x21582c6c _0x15117b28 _0x28a37d34 _0x9525aac1 or _0x5c731c8c for _0x8dc06112.",
+			"_0xd8de6a6d 10 _0x640fd0cc."
 		}
 	},
-	["WorkingBeeSwarm"] = {
-		emoji = "🐝",
-		effects = {
-			"Spawns bees that generate Pollinated Mutations with x10 Speed Craft.",
-			"Higher Pollinated fruit chance.",
-			"Lasts 10 minutes."
+	["_0xfdf82794"] = {
+		_0xba323c3f = "🐝",
+		_0x2bb387c5 = {
+			"_0x95f20efb _0xfc241ec2 _0x21582c6c _0x15117b28 _0x28a37d34 _0x9525aac1 _0x23a58bf9 _0x2040a28d _0x44877c6a _0xd64fc815.",
+			"_0xd030eeeb _0x28a37d34 _0xe0deff34 _0x1ea287f2.",
+			"_0xd8de6a6d 10 _0x640fd0cc."
 		}
 	},
-	["MegaHarvest"] = {
-		emoji = "⛏️",
-		effects = {
-			"Grants 2x Harvest Points and growth speed."
+	["_0xdeb1c56b"] = {
+		_0xba323c3f = "⛏️",
+		_0x2bb387c5 = {
+			"_0x9d332be9 2x _0xcb49ad33 _0x75dd5f11 and _0x5ff58d62 _0xce4ef3ec."
 		}
 	},
-	["SunGod"] = {
-		emoji = "🌞",
-		effects = {
-			"Applies Dawnbound mutation to sunflowers near Sun God.",
-			"Speeds up growth of Sunflower."
+	["_0xa5baae9f"] = {
+		_0xba323c3f = "🌞",
+		_0x2bb387c5 = {
+			"_0x8e99143f _0x49be843c _0x32a228ed _0x01b6e203 _0x17261b4f _0x85f06cc8 _0xef6572e4 _0xaeb9573c.",
+			"_0xe12a8927 _0x46c48bec _0x5ff58d62 _0x8bf8854b _0xb54b4b34."
 		}
 	},
-	["Sandstorm"] = {
-		emoji = "🏜️",
-		effects = {
-			"Gives the Sandy mutation.",
-			"Can combine with Sundried or Burnt to create Ceramic."
-			"Can combine with Wet to create Clay."
+	["_0xcb1d02ce"] = {
+		_0xba323c3f = "🏜️",
+		_0x2bb387c5 = {
+			"_0xe96f7a63 _0x8fc42c6d _0xf1b5a149 _0x32a228ed.",
+			"_0xd677b410 _0xc3eef34d _0x23a58bf9 _0x09295c92 or _0x1eafd674 _0x01b6e203 _0x76ea0beb _0x81fd1fe6."
+			"_0xd677b410 _0xc3eef34d _0x23a58bf9 _0xae789b86 _0x01b6e203 _0x76ea0beb _0xed5eace1."
 		}
 	},
-	["Heatwave"] = {
-		emoji = "🌅",
-		effects = {
-			"Applies the Sundried mutation to crops."
+	["_0x522f8aad"] = {
+		_0xba323c3f = "🌅",
+		_0x2bb387c5 = {
+			"_0x8e99143f _0x8fc42c6d _0x09295c92 _0x32a228ed _0x01b6e203 _0x05573591."
 		}
 	}
 }
 
--- Send Weather Webhook Embed
-local function SendWeatherEmbed(eventName, duration)
-	local data = weatherEffects[eventName] or { emoji = "❓", effects = {"No effect information."} }
-	local webhook = encodedWebhooks["__WEATHER__"]
-	if not webhook then return end
+-- _0x94966d90 _0x1441df6b _0x150c7abf _0xf210e321
+local function _0x64728d09(_0xe0cf6877, _0xb85ec314)
+	local data = _0x5e2f3c20[_0xe0cf6877] or { _0xba323c3f = "❓", _0x2bb387c5 = {"_0xbafd7322 _0xbf5b17fa _0xbb3ccd58."} }
+	local _0x2ff80e91 = _0x9f0f08ff["__WEATHER__"]
+	if not _0x2ff80e91 then return end
 
-	local endTime = math.round(workspace:GetServerTimeNow()) + duration
-	local playerCount = #Players:GetPlayers()
-	local maxPlayers = Players.MaxPlayers
+	local _0xc5b5790b = math._0x9bbd993d(workspace:_0x42195dbe()) + _0xb85ec314
+	local _0x17f1559a = #Players:_0x20f12e19()
+	local _0xf8f9f22d = Players._0x182139ac
 
-	local desc = table.concat({
-		"🕒 Ends: <t:" .. endTime .. ":R>",
+	local _0x1dee80c7 = table._0x414e7c8e({
+		"🕒 _0xda22a183: <_0xe358efa4:" .. _0xc5b5790b .. ":_0xe1e1d3d4>",
 		"",
 		"Players:",
-		playerCount .. "/" .. maxPlayers,
+		_0x17f1559a .. "/" .. _0xf8f9f22d,
 		"",
-		"📈 Effects:",
-		"• " .. table.concat(data.effects, "\n• ")
-	}, "\n")
+		"📈 _0x527e4752:",
+		"• " .. table._0x414e7c8e(data._0x2bb387c5, "\_0x7b8b965a• ")
+	}, "\_0x7b8b965a")
 
-	local title = "🌦️ WEATHER EVENT\n\n" .. data.emoji .. " " .. eventName
+	local _0xd5d3db17 = "🌦️ _0x83a014c3 _0x030d962d\_0x7b8b965a\_0x7b8b965a" .. data._0xba323c3f .. " " .. _0xe0cf6877
 
-	SendSingleEmbed(title, desc, 255, webhook, defaultImage)
+	_0x7007b19e(_0xd5d3db17, _0x1dee80c7, 255, _0x2ff80e91, _0x0ed4e684)
 end
 
--- Weather Event Trigger
-WeatherEventStarted.OnClientEvent:Connect(function(eventName, duration)
-	SendWeatherEmbed(eventName, duration)
+-- _0x1441df6b _0xa4ecfc70 _0xf698f67f
+_0x00c4712f._0x3f55bc2a:_0x49ab2804(function(_0xe0cf6877, _0xb85ec314)
+	_0x64728d09(_0xe0cf6877, _0xb85ec314)
 end)
 
--- UI Notification (optional)
+-- _0x71ff7152 _0x96d008db (_0xd57c24f3)
 pcall(function()
-	game.StarterGui:SetCore("SendNotification", {
-		Title = "RTaO HUB",
-		Text = "RTaO Dev Stock + Weather Tracker Loaded ✅",
-		Duration = 3,
-		Icon = "rbxassetid://79326323696135"
+	game._0xd1de133e:_0x60d826b4("_0xb91404d6", {
+		_0xb78a3223 = "_0xacc8ef58 _0x3cc0a3bb",
+		_0x9dffbf69 = "_0xacc8ef58 _0x55f37d1f _0x27ce7f8b + _0x1441df6b _0x26b8a5f8 _0x7381d487 ✅",
+		_0xe02d2ae0 = 3,
+		_0x81743429 = "_0x4c729324://79326323696135"
 	})
 end)
