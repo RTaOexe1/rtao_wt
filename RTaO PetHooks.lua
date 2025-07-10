@@ -37,7 +37,7 @@ petEggData.ChildAdded:Connect(function(pet)
 
 	-- 📤 สร้าง Embed
 	local embed = {
-		username = "BONK HUB | discord.gg/bonkhub",
+		username = "RTaO Hooks | discord.gg/rtaohooks",
 		embeds = {{
 			title = "🎉 New Pet Acquired!",
 			description = "You have received a new pet!",
