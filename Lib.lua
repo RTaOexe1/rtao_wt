@@ -15,7 +15,7 @@ function Library:Setup()
 		Icon = "rbxassetid://80647723335499",
 		Author = (premium and "Premium" or " Grow a Graden") .. " | " .. version,
 		Folder = "RTaO-GAG",
-		Size = UDim2.fromOffset(580, 460),
+		Size = UDim2.fromOffset(0, 380, 0, 260),
 		Transparent = true,
 		Theme = "Dark",
 		Resizable = true,
