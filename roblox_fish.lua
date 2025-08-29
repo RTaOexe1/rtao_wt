@@ -17,9 +17,9 @@ local InfoTab = Window:Tab({ Title = "Info", Icon = "info" })
 InfoTab:Paragraph({
     Title = "Welcome to RTaO Script",
     Desc = "Version Game: Fish it.",
-    Image = "rbxassetid://85693098195372",
+    Image = "rbxassetid://121989361864413",
     ImageSize = 30,
-    Thumbnail = "rbxassetid://121989361864413",
+    Thumbnail = "rbxassetid://115270950864592",
     ThumbnailSize = 170
 })
 
