@@ -2,8 +2,8 @@ local HttpService = game:GetService("HttpService")
 local UserInputService = game:GetService("UserInputService")
 
 -- Config
-local pastebinRaw = "https://link-center.net/1373842/rYdVBJJjfRdz"
-local getKeyLink = "https://link-center.net/1373842/rYdVBJJjfRdz"
+local pastebinRaw = "https://link-hub.net/1384696/v7giyJCZ6KOH"
+local getKeyLink = "https://link-hub.net/1384696/v7giyJCZ6KOH"
 local backupKey = "RTao-DEV-FREEKEY-01"
 local keyFileName = "RTaOKeyData.json"
 local expireTimeInSeconds = 60 * 60 * 12 -- 12 jam
