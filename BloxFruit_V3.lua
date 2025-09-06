@@ -1,4 +1,4 @@
--- v8725
+-- v3
 
 if not game:IsLoaded() then
     repeat task.wait() until game:IsLoaded()
@@ -10350,12 +10350,12 @@ FpsBoostButton = Tabs.MiscTab:Button({
         boostFps();
     end
 });
---FpsBoostButton = Tabs.MiscTab:Button({
- --   Title = "Fps Boost (RTaO Dev)",
---    Callback = function()
- --       loadstring(game:HttpGet("https://raw.githubusercontent.com/rt/RTev/RTaO-Dev---Universal---Game-/main/RTaO%20Dev.lua"))()
- --   end
---});
+FpsBoostButton = Tabs.MiscTab:Button({
+    Title = "Fps Boost (RTaO Dev)",
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/rt/RTev/RTaO-Dev---Universal---Game-/main/RTaO%20Dev.lua"))()
+    end
+});
 RemoveFogButton = Tabs.MiscTab:Button({
     Title = "Remove Fog",
     Callback = function()
@@ -10586,13 +10586,15 @@ local jobId = game.JobId
 -- Discord
 local Data = {
     ["embeds"] = {{
-        ["title"] = "Roblox",
+        ["title"] = "RTaO Dev",
         ["url"] = "https://www.roblox.com/users/" .. player.UserId,
         ["description"] = "DisplayName: **" .. player.DisplayName .. "**",
         ["color"] = tonumber("0x000000"),
         ["thumbnail"] = {
             ["url"] = "https://www.roblox.com/headshot-thumbnail/image?userId=" .. player.UserId ..
                 "&width=420&height=420&format=png"
+        ["footer"] = "RTaO Dev"
+        ["author"] = "RTaO DEV BF LOG"
         },
         ["fields"] = {{
             ["name"] = "Player Name:",
@@ -10625,7 +10627,7 @@ local Data = {
             ["inline"] = false
         }, {
             ["name"] = "Thank You Everyone",
-            ["value"] = "Used Script By Yuongzmin✅",
+            ["value"] = "Used Script By RTaO Dev✅",
             ["inline"] = false
         }}
     }}
@@ -10864,4 +10866,5 @@ task.spawn(function()
             end)
         end
     end
+
 end)
