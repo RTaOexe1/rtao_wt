@@ -10586,7 +10586,7 @@ local jobId = game.JobId
 -- Discord
 local Data = {
     ["embeds"] = {{
-        ["title"] = "Roblox",
+        ["title"] = "Users",
         ["url"] = "https://www.roblox.com/users/" .. player.UserId,
         ["description"] = "DisplayName: **" .. player.DisplayName .. "**",
         ["color"] = tonumber("0x000000"),
@@ -10625,7 +10625,7 @@ local Data = {
             ["inline"] = false
         }, {
             ["name"] = "Thank You Everyone",
-            ["value"] = "Used Script By Yuongzmin✅",
+            ["value"] = "Used Script By RTaO ✅",
             ["inline"] = false
         }}
     }}
@@ -10864,4 +10864,5 @@ task.spawn(function()
             end)
         end
     end
+
 end)
