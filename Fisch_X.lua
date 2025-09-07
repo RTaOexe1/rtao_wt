@@ -3,7 +3,7 @@ local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/d
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
 
 local Window = Fluent:CreateWindow({
-	Title = "DYHUB",
+	Title = "RTaO Dev",
 	SubTitle = "Fisch | Premium Version",
 	TabWidth = 160,
 	Size = UDim2.fromOffset(550, 350),
@@ -3058,12 +3058,11 @@ local Tap = {
 	Settings = Window:AddTab({Title = "Settings", Icon = "settings"})
 }
 
-Toggle = function(Section, NameIndex, Description, ConfigName, Function, ...)
-	local Misc = {...}
+Toggle = function(Section, NameIndex, Description, ConfigName, Function)
 	ConfigName = ConfigName or NameIndex
 	local defaultState = Config[ConfigName] or false
 
-	local CreateToggle = Section:AddToggle((NameIndex or NameIndex.."-toggle"), {
+	local CreateToggle = Section:AddToggle((NameIndex .. "-toggle"), {
 		Title = NameIndex or "null",
 		Default = defaultState,
 		Description = Description or "",
@@ -3072,15 +3071,13 @@ Toggle = function(Section, NameIndex, Description, ConfigName, Function, ...)
 	CreateToggle:OnChanged(function(v)
 		Config[ConfigName] = v
 		save()
+
 		if Function then
 			Function(v)
-		else
-			if AllFuncs[ConfigName] then
-				local threadRunning = task.spawn(AllFuncs[ConfigName])
-
-				if not v and threadRunning then
-					task.cancel(threadRunning)
-				end
+		elseif AllFuncs[ConfigName] then
+			local threadRunning = task.spawn(AllFuncs[ConfigName])
+			if not v and threadRunning then
+				task.cancel(threadRunning)
 			end
 		end
 	end)
@@ -3088,26 +3085,34 @@ Toggle = function(Section, NameIndex, Description, ConfigName, Function, ...)
 	return CreateToggle
 end
 
-Slider = function(section,Name,min,max,Rounding,...)
-	local SettingName,func = ...
-	if not func and type(SettingName) == "function" then func = SettingName end
-	if not SettingName then SettingName = Name end
-	local default = Config[SettingName]
-	local CreateSlider = section:AddSlider((Name or Name.."-slider"), {
-		Title =Name or "null",
+
+Slider = function(section, Name, min, max, Rounding, SettingName, func)
+	
+	if type(SettingName) == "function" then
+		func = SettingName
+		SettingName = Name
+	end
+	SettingName = SettingName or Name
+
+	local default = Config[SettingName] or min
+
+	local CreateSlider = section:AddSlider((Name .. "-slider"), {
+		Title = Name or "null",
 		Min = min or 0,
 		Max = max or 1,
-		Default = (Config[SettingName] or default) or min,
+		Default = default,
 		Rounding = (Rounding == true and 1) or 0,
 	})
 
 	CreateSlider:OnChanged(function(v)
-		save()
 		Config[SettingName] = v
+		save()
+		if func then func(v) end
 	end)
-	task.wait()
+
 	return CreateSlider
-end
+			end
+			
 
 TextBox = function(section,Name,tooltip,PlaceHolder,Numberic,...)
 	local SettingName,func = ...
@@ -4205,4 +4210,5 @@ while true do
     end
     wait(0)
 end
+
 end
