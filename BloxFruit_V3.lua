@@ -393,18 +393,18 @@ _G.Settings = {
 };
 (getgenv()).Load = function()
     if readfile and writefile and isfile and isfolder then
-        if not isfolder("Relz Hub New") then
-            makefolder("Relz Hub New");
+        if not isfolder("RTaO Dev New") then
+            makefolder("RTaO Dev New");
         end
-        if not isfolder("Relz Hub New/Blox Fruits/") then
-            makefolder("Relz Hub New/Blox Fruits/");
+        if not isfolder("RTaO Dev New/Blox Fruits/") then
+            makefolder("RTaO Dev New/Blox Fruits/");
         end
-        if not isfile(("Relz Hub New/Blox Fruits/" .. game.Players.LocalPlayer.Name .. ".json")) then
-            writefile("Relz Hub New/Blox Fruits/" .. game.Players.LocalPlayer.Name .. ".json",
+        if not isfile(("RTaO Dev New/Blox Fruits/" .. game.Players.LocalPlayer.Name .. ".json")) then
+            writefile("RTaO Dev New/Blox Fruits/" .. game.Players.LocalPlayer.Name .. ".json",
                 (game:GetService("HttpService")):JSONEncode(_G.Settings));
         else
             local Decode = (game:GetService("HttpService")):JSONDecode(readfile(
-                "Relz Hub New/Blox Fruits/" .. game.Players.LocalPlayer.Name .. ".json"));
+                "RTaO Dev New/Blox Fruits/" .. game.Players.LocalPlayer.Name .. ".json"));
             for i, v in pairs(Decode) do
                 _G.Settings[i] = v;
             end
@@ -416,16 +416,16 @@ _G.Settings = {
 end;
 (getgenv()).SaveSetting = function()
     if readfile and writefile and isfile and isfolder then
-        if not isfile(("Relz Hub New/Blox Fruits/" .. game.Players.LocalPlayer.Name .. ".json")) then
+        if not isfile(("RTaO Dev New/Blox Fruits/" .. game.Players.LocalPlayer.Name .. ".json")) then
             (getgenv()).Load();
         else
             local Decode = (game:GetService("HttpService")):JSONDecode(readfile(
-                "Relz Hub New/Blox Fruits/" .. game.Players.LocalPlayer.Name .. ".json"));
+                "RTaO Dev New/Blox Fruits/" .. game.Players.LocalPlayer.Name .. ".json"));
             local Array = {};
             for i, v in pairs(_G.Settings) do
                 Array[i] = v;
             end
-            writefile("Relz Hub New/Blox Fruits/" .. game.Players.LocalPlayer.Name .. ".json",
+            writefile("RTaO Dev New/Blox Fruits/" .. game.Players.LocalPlayer.Name .. ".json",
                 (game:GetService("HttpService")):JSONEncode(Array));
         end
     else
@@ -6805,15 +6805,15 @@ spawn(function()
     pcall(function()
         while wait(0.2) do
             if game.Workspace.Map.RaidMap:FindFirstChild("RaidIsland5") then
-                IslandRaidParagraph:SetDesc("ðŸï¸ Island 5");
+                IslandRaidParagraph:SetDesc("Island 5");
             elseif game.Workspace.Map.RaidMap:FindFirstChild("RaidIsland4") then
-                IslandRaidParagraph:SetDesc("ðŸï¸ Island 4");
+                IslandRaidParagraph:SetDesc("Island 4");
             elseif game.Workspace.Map.RaidMap:FindFirstChild("RaidIsland3") then
-                IslandRaidParagraph:SetDesc("ðŸï¸ Island 3");
+                IslandRaidParagraph:SetDesc("Island 3");
             elseif game.Workspace.Map.RaidMap:FindFirstChild("RaidIsland2") then
-                IslandRaidParagraph:SetDesc("ðŸï¸ Island 2");
+                IslandRaidParagraph:SetDesc("Island 2");
             elseif game.Workspace.Map.RaidMap:FindFirstChild("RaidIsland1") then
-                IslandRaidParagraph:SetDesc("ðŸï¸ Island 1");
+                IslandRaidParagraph:SetDesc("Island 1");
             else
                 IslandRaidParagraph:SetDesc("Start Dungeon");
             end
@@ -10866,3 +10866,4 @@ task.spawn(function()
     end
 
 end)
+
