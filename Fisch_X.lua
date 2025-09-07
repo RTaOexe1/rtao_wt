@@ -56,13 +56,13 @@ end
 
 function Notify(Des, Time, title)
 	Fluent:Notify({
-		Title= title or "DYHUB Notify",
+		Title= title or "RTaO Dev Notify",
 		Content = Des,
 		Duration = Time or 3
 	})
 end
 
-_G['Normal Hub Table'] = {
+_G['RTaO Dev Table'] = {
 	isWindows = UserInputService:GetPlatform() == Enum.Platform.Windows,
 	TypeOs = (table.find({Enum.Platform.Windows}, game:GetService('UserInputService'):GetPlatform()) ~= nil and 'Pc') or 'Mobile',
 	SizeUi = (not isWindows and UDim2.fromOffset(600,300)) or UDim2.fromOffset(560,600),
@@ -77,8 +77,8 @@ _G['Normal Hub Table'] = {
 	AnimationUiToggle = true,
 }
 
-_G['DYHUB Table'].SizeUi = (not _G['DYHUB Table'].isWindows and UDim2.fromOffset(600,300)) or UDim2.fromOffset(560,600)
-if not _G['DYHUB Table'].isWindows then
+_G['RTaO Dev Table'].SizeUi = (not _G['RTaO Dev Table'].isWindows and UDim2.fromOffset(600,300)) or UDim2.fromOffset(560,600)
+if not _G['RTaO Dev Table'].isWindows then
 	if game.CoreGui:FindFirstChild('UIBUTTON') then
 		game.CoreGui:FindFirstChild('UIBUTTON'):Destroy()
 	end
@@ -186,7 +186,7 @@ UICorner.Parent = ImageButton
 end
 
 do -- Settings Initializer
-	local path = "Normal Hub/fisch"
+	local path = "RTaO Dev/fisch"
 	if not isfolder(path) then makefolder(path) end
 	DefaultConfigName = path.."/OriConfibg.json"
 	ConfigName = path.."/"..Client.UserId.."Config.json"
@@ -240,14 +240,14 @@ end
 
 do -- Config Function
 	save = function()
-		if not isfolder('Normal Hub') then
-			makefolder('Normal Hub')
+		if not isfolder('RTaO Dev') then
+			makefolder('RTaO Dev')
 		end
 		writefile(ConfigName,game:GetService("HttpService"):JSONEncode(Config))
 	end
 	setDefaultConfig = function()
-		if not isfolder('Normal Hub') then
-			makefolder('Normal Hub')
+		if not isfolder('RTaO Dev') then
+			makefolder('RTaO Dev')
 		end
 		writefile(DefaultConfigName,game:GetService("HttpService"):JSONEncode(Config))
 	end
@@ -4212,3 +4212,4 @@ while true do
 end
 
 end
+
