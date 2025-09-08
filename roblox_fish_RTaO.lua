@@ -5,7 +5,7 @@ local Window = WindUI:CreateWindow({
     Title = "RTaO Dev - Fish It",
     Icon = "rbxassetid://80647723335499",
     IconThemed = true,
-    Author = "VERSION: FREEMIUM",
+    Author = "VERSION: BETA",
     Folder = "RTaO Dev",
     Size = UDim2.new(0, 380, 0, 260), -- ✅ Lebih kecil biar pas di Android
     Theme = "Dark" -- Bisa ganti "Light" kalau silau
@@ -563,67 +563,50 @@ local TpTab = Window:Tab({
     Icon = "map-pin"
 })
 
--- Daftar lokasi teleport
-local teleportLocations = {
-    {Title = "Kohana Lava", Position = Vector3.new(-593.32, 59.0, 130.82)},
-    {Title = "Esotoric Island", Position = Vector3.new(2024.490, 27.397, 1391.620)},
-    {Title = "Ice Island", Position = Vector3.new(1766.46, 19.16, 3086.23)},
-    {Title = "Kohana", Position = Vector3.new(-630.300, 16.035, 597.480)},
-    {Title = "Lost Isle", Position = Vector3.new(-3660.070, 5.426, -1053.020)},
-    {Title = "Stingray Shores", Position = Vector3.new(45.280, 28.000, 2987.110)},
-    {Title = "Tropical Grove", Position = Vector3.new(-2092.897, 6.268, 3693.929)},
-    {Title = "Weather Machine", Position = Vector3.new(-1495.250, 6.500, 1889.920)},
-    {Title = "Coral Reefs", Position = Vector3.new(-2949.359, 63.250, 2213.966)},
-    {Title = "Crater Island", Position = Vector3.new(1012.045, 22.676, 5080.221)},
-    {Title = "Teleport To Enchant", Position = Vector3.new(3236.120, -1302.855, 1399.491)}
+local islandCoords = {
+	["01"] = { name = "Weather Machine", position = Vector3.new(-1471, -3, 1929) },
+	["02"] = { name = "Esoteric Depths", position = Vector3.new(3157, -1303, 1439) },
+	["03"] = { name = "Tropical Grove", position = Vector3.new(-2038, 3, 3650) },
+	["04"] = { name = "Stingray Shores", position = Vector3.new(-32, 4, 2773) },
+	["05"] = { name = "Kohana Volcano", position = Vector3.new(-519, 24, 189) },
+	["06"] = { name = "Coral Reefs", position = Vector3.new(-3095, 1, 2177) },
+	["07"] = { name = "Crater Island", position = Vector3.new(968, 1, 4854) },
+	["08"] = { name = "Kohana", position = Vector3.new(-658, 3, 719) },
+	["09"] = { name = "Winter Fest", position = Vector3.new(1611, 4, 3280) },
+	["10"] = { name = "Isoteric Island", position = Vector3.new(1987, 4, 1400) },
+	["11"] = { name = "Treasure Hall", position = Vector3.new(-3600, -267, -1558) },
+	["12"] = { name = "Lost Shore", position = Vector3.new(-3663, 38, -989 ) },
+	["13"] = { name = "Sishypus Statue", position = Vector3.new(-3792, -135, -986) }
 }
 
--- Buat list nama untuk dropdown
-local locationNames = {}
-for _, loc in ipairs(teleportLocations) do
-    table.insert(locationNames, loc.Title)
+local islandNames = {}
+for _, data in pairs(islandCoords) do
+    table.insert(islandNames, data.name)
 end
 
--- Default selected location
-local selectedLocation = locationNames[1]
+TpTab:Dropdown({
+    Title = "Island Selector",
+    Desc = "Select island to teleport",
+    Values = islandNames,
+    Value = islandNames[1],
+    Callback = function(selectedName)
+        for code, data in pairs(islandCoords) do
+            if data.name == selectedName then
+                local success, err = pcall(function()
+                    local charFolder = workspace:WaitForChild("Characters", 5)
+                    local char = charFolder:FindFirstChild(LocalPlayer.Name)
+                    if not char then error("Character not found") end
+                    local hrp = char:FindFirstChild("HumanoidRootPart") or char:WaitForChild("HumanoidRootPart", 3)
+                    if not hrp then error("HumanoidRootPart not found") end
+                    hrp.CFrame = CFrame.new(data.position + Vector3.new(0, 5, 0))
+                end)
 
--- Paragraph
-TpTab:Paragraph({
-    Title = "Teleport To Island",
-    Desc = "Select a location and press Teleport."
-})
-
--- Dropdown Teleport
-local teleportDropdown = TpTab:Dropdown({
-    Title = "Select Location",
-    Values = locationNames,
-    Value = selectedLocation,
-    Callback = function(value)
-        selectedLocation = value
-        WindUI:Notify({Title="Location Selected", Content=value, Duration=3})
-    end
-})
-
--- Tombol Teleport
-TpTab:Button({
-    Title = "Teleport To Island",
-    Icon = "rbxassetid://85151307796718",
-    Callback = function()
-        if selectedLocation then
-            local loc
-            for _, l in ipairs(teleportLocations) do
-                if l.Title == selectedLocation then
-                    loc = l
-                    break
+                if success then
+                    NotifySuccess("Teleported!", "You are now at " .. selectedName)
+                else
+                    NotifyError("Teleport Failed", tostring(err))
                 end
-            end
-
-            if loc then
-                local player = game.Players.LocalPlayer
-                local character = player.Character or player.CharacterAdded:Wait()
-                local hrp = character:WaitForChild("HumanoidRootPart")
-                hrp.CFrame = CFrame.new(loc.Position)
-                WindUI:Notify({Title="Teleported", Content="Teleported to "..loc.Title, Duration=3})
+                break
             end
         end
     end
@@ -756,7 +739,7 @@ spawn(function()
         refreshPlayerDropdown()
     end
 end)
-
+--[[
 TpTab:Paragraph({
     Title = "Saved & Load, Location",
     Desc = "Saved Potition And Load Potition"
@@ -817,7 +800,75 @@ TpTab:Button({
         end
     end
 })
+]]
 
+local eventsList = { "Shark Hunt", "Ghost Shark Hunt", "Worm Hunt", "Black Hole", "Shocked", "Ghost Worm", "Meteor Rain" }
+
+TpTab:Dropdown({
+    Title = "Teleport Event",
+    Values = eventsList,
+    Value = "Shark Hunt",
+    Callback = function(option)
+        local props = workspace:FindFirstChild("Props")
+        if props and props:FindFirstChild(option) and props[option]:FindFirstChild("Fishing Boat") then
+            local fishingBoat = props[option]["Fishing Boat"]
+            local boatCFrame = fishingBoat:GetPivot()
+            local hrp = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+            if hrp then
+                hrp.CFrame = boatCFrame + Vector3.new(0, 15, 0)
+                WindUI:Notify({
+                	Title = "Event Available!",
+                	Content = "Teleported To " .. option,
+                	Icon = "circle-check",
+                	Duration = 3
+                })
+            end
+        else
+            WindUI:Notify({
+                Title = "Event Not Found",
+                Text = option .. " Not Found!",
+                Icon = "ban",
+                Duration = 3
+            })
+        end
+    end
+})
+
+local npcFolder = game:GetService("ReplicatedStorage"):WaitForChild("NPC")
+
+local npcList = {}
+for _, npc in pairs(npcFolder:GetChildren()) do
+	if npc:IsA("Model") then
+		local hrp = npc:FindFirstChild("HumanoidRootPart") or npc.PrimaryPart
+		if hrp then
+			table.insert(npcList, npc.Name)
+		end
+	end
+end
+
+
+TpTab:Dropdown({
+	Title = "NPC",
+	Desc = "Select NPC to Teleport",
+	Values = npcList,
+	Value = nil,
+	Callback = function(selectedName)
+		local npc = npcFolder:FindFirstChild(selectedName)
+		if npc and npc:IsA("Model") then
+			local hrp = npc:FindFirstChild("HumanoidRootPart") or npc.PrimaryPart
+			if hrp then
+				local charFolder = workspace:FindFirstChild("Characters", 5)
+				local char = charFolder and charFolder:FindFirstChild(LocalPlayer.Name)
+				if not char then return end
+				local myHRP = char:FindFirstChild("HumanoidRootPart")
+				if myHRP then
+					myHRP.CFrame = hrp.CFrame + Vector3.new(0, 3, 0)
+					NotifySuccess("Teleported!", "You are now near: " .. selectedName)
+				end
+			end
+		end
+	end
+})
 -- Spawn Boat Tab
 local SpawnBoatTab = Window:Tab({  
     Title = "Spawn Boat",  
