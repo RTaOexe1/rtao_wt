@@ -457,6 +457,75 @@ local AutoEventTab = Window:Tab({
 -------------------------------------------
 ----- =======[ AUTO FARM TAB ]
 -------------------------------------------
+FuncAutoFish.REReplicateTextEffect.OnClientEvent:Connect(function(data)
+    if FuncAutoFish.autofish and FuncAutoFish.fishingActive
+    and data
+    and data.TextData
+    and data.TextData.EffectType == "Exclaim" then
+
+        local myHead = Players.LocalPlayer.Character and Players.LocalPlayer.Character:FindFirstChild("Head")      
+        if myHead and data.Container == myHead then      
+            task.spawn(function()      
+                for i = 1, 3 do
+                    task.wait(BypassDelay)
+                    finishRemote:FireServer()      
+                    rconsoleclear()      
+                end      
+            end)      
+        end      
+    end
+end)
+
+function StartAutoFish()
+FuncAutoFish.autofish = true
+updateDelayBasedOnRod(true)
+monitorFishThreshold()
+task.spawn(function()      
+    while FuncAutoFish.autofish do      
+        pcall(function()      
+            FuncAutoFish.fishingActive = true      
+  
+            local equipRemote = net:WaitForChild("RE/EquipToolFromHotbar")      
+            equipRemote:FireServer(1)      
+            task.wait(0.1)      
+  
+            local chargeRemote = ReplicatedStorage      
+                .Packages._Index["sleitnick_net@0.2.0"].net["RF/ChargeFishingRod"]      
+            chargeRemote:InvokeServer(workspace:GetServerTimeNow())      
+                  
+            task.wait(0.5)      
+  
+            local timestamp = workspace:GetServerTimeNow()      
+            RodShake:Play()      
+            rodRemote:InvokeServer(timestamp)      
+  
+            local baseX, baseY = -0.7499996423721313, 0.991067629351885      
+            local x, y      
+            if FuncAutoFish.perfectCast then      
+                x = baseX + (math.random(-500, 500) / 10000000)      
+                y = baseY + (math.random(-500, 500) / 10000000)      
+            else      
+                x = math.random(-1000, 1000) / 1000      
+                y = math.random(0, 1000) / 1000      
+            end      
+  
+            RodIdle:Play()      
+            miniGameRemote:InvokeServer(x, y)      
+  
+            task.wait(FuncAutoFish.customDelay)      
+  
+            FuncAutoFish.fishingActive = false      
+        end)      
+    end      
+end)
+
+end
+
+function StopAutoFish()
+FuncAutoFish.autofish = false
+FuncAutoFish.fishingActive = false
+FuncAutoFish.delayInitialized = false
+end
 
 
 local floatPlatform = nil
