@@ -5,7 +5,7 @@ local Window = WindUI:CreateWindow({
     Title = "RTaO Dev - Fish It",
     Icon = "rbxassetid://80647723335499",
     IconThemed = true,
-    Author = "VERSION: FREEMIUM",
+    Author = "VERSION: BETA",
     Folder = "RTaO Dev",
     Size = UDim2.new(0, 380, 0, 260), -- ✅ Lebih kecil biar pas di Android
     Theme = "Dark" -- Bisa ganti "Light" kalau silau
@@ -628,6 +628,42 @@ TpTab:Button({
         end
     end
 })
+
+--Teleport Event 
+
+local eventsList = { "Shark Hunt", "Ghost Shark Hunt", "Worm Hunt", "Black Hole", "Shocked", "Ghost Worm", "Meteor Rain" }
+
+TpTab:Dropdown({
+    Title = "Teleport Event",
+    Values = eventsList,
+    Value = "Shark Hunt",
+    Callback = function(option)
+        local props = workspace:FindFirstChild("Props")
+        if props and props:FindFirstChild(option) and props[option]:FindFirstChild("Fishing Boat") then
+            local fishingBoat = props[option]["Fishing Boat"]
+            local boatCFrame = fishingBoat:GetPivot()
+            local hrp = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+            if hrp then
+                hrp.CFrame = boatCFrame + Vector3.new(0, 15, 0)
+                WindUI:Notify({
+                	Title = "Event Available!",
+                	Content = "Teleported To " .. option,
+                	Icon = "circle-check",
+                	Duration = 3
+                })
+            end
+        else
+            WindUI:Notify({
+                Title = "Event Not Found",
+                Text = option .. " Not Found!",
+                Icon = "ban",
+                Duration = 3
+            })
+        end
+    end
+})
+
+
 
 -- Toggle Diving Gear ON/OFF
 TpTab:Toggle({
