@@ -813,35 +813,6 @@ for _, npc in pairs(npcFolder:GetChildren()) do
 	end
 end
 
--- Paragraph
-TpTab:Paragraph({
-    Title = "Teleport To NPC",
-    Desc = "TELEPORT TO N0C."
-})
-
-TpTab:Dropdown({
-	Title = "NPC",
-	Desc = "Select NPC to Teleport",
-	Values = npcList,
-	Value = nil,
-	Callback = function(selectedName)
-		local npc = npcFolder:FindFirstChild(selectedName)
-		if npc and npc:IsA("Model") then
-			local hrp = npc:FindFirstChild("HumanoidRootPart") or npc.PrimaryPart
-			if hrp then
-				local charFolder = workspace:FindFirstChild("Characters", 5)
-				local char = charFolder and charFolder:FindFirstChild(LocalPlayer.Name)
-				if not char then return end
-				local myHRP = char:FindFirstChild("HumanoidRootPart")
-				if myHRP then
-					myHRP.CFrame = hrp.CFrame + Vector3.new(0, 3, 0)
-					NotifySuccess("Teleported!", "You are now near: " .. selectedName)
-				end
-			end
-		end
-	end
-})
-
 -- ===== Load Config =====
 local savedConfig
 if Window.ConfigManager then
@@ -896,6 +867,35 @@ TpTab:Button({
             WindUI:Notify({Title="Info", Content="No saved position found, please save first.", Duration=3})
         end
     end
+})
+
+-- Paragraph
+TpTab:Paragraph({
+    Title = "Teleport To NPC",
+    Desc = "TELEPORT TO N0C."
+})
+
+TpTab:Dropdown({
+	Title = "NPC",
+	Desc = "Select NPC to Teleport",
+	Values = npcList,
+	Value = nil,
+	Callback = function(selectedName)
+		local npc = npcFolder:FindFirstChild(selectedName)
+		if npc and npc:IsA("Model") then
+			local hrp = npc:FindFirstChild("HumanoidRootPart") or npc.PrimaryPart
+			if hrp then
+				local charFolder = workspace:FindFirstChild("Characters", 5)
+				local char = charFolder and charFolder:FindFirstChild(LocalPlayer.Name)
+				if not char then return end
+				local myHRP = char:FindFirstChild("HumanoidRootPart")
+				if myHRP then
+					myHRP.CFrame = hrp.CFrame + Vector3.new(0, 3, 0)
+					NotifySuccess("Teleported!", "You are now near: " .. selectedName)
+				end
+			end
+		end
+	end
 })
 
 -- Spawn Boat Tab
