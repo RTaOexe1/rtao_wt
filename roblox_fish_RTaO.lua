@@ -563,6 +563,11 @@ local TpTab = Window:Tab({
     Icon = "map-pin"
 })
 
+TpTab:Paragraph({
+    Title = "Teleport To IsLand",
+    Desc = "Select Name Player And Press Teleport"
+})
+
 local islandCoords = {
 	["01"] = { name = "Weather Machine", position = Vector3.new(-1471, -3, 1929) },
 	["02"] = { name = "Esoteric Depths", position = Vector3.new(3157, -1303, 1439) },
@@ -664,7 +669,7 @@ TpTab:Toggle({
 
 TpTab:Paragraph({
     Title = "Teleport To Other Player",
-    Desc = "Select Name Player And Press Teleport"
+    Desc = "Select Name IsLand Teleport"
 })
 
 -- Teleport to Player Tab
@@ -801,6 +806,10 @@ TpTab:Button({
     end
 })
 ]]
+TpTab:Paragraph({
+    Title = "Teleport To Event",
+    Desc = "Select Name Event Teleport"
+})
 
 local eventsList = { "Shark Hunt", "Ghost Shark Hunt", "Worm Hunt", "Black Hole", "Shocked", "Ghost Worm", "Meteor Rain" }
 
@@ -846,6 +855,10 @@ for _, npc in pairs(npcFolder:GetChildren()) do
 	end
 end
 
+TpTab:Paragraph({
+    Title = "Teleport To Other NPC",
+    Desc = "Select Name NPC Teleport"
+})
 
 TpTab:Dropdown({
 	Title = "NPC",
