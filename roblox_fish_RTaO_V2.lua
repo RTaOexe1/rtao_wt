@@ -449,7 +449,7 @@ local antiKickToggle = AutofarmTab:Toggle({
     end
 })
 
-local AutoFarmTab = Window:Tab({
+local AutoEventTab = Window:Tab({
 	Title = "Auto Farm V2",
 	Icon = "leaf"
 })
@@ -763,7 +763,7 @@ end
 
 table.sort(nameList)
 
-local CodeIsland = AutoFarmTab:Dropdown({
+local CodeIsland = AutoEventTab:Dropdown({
     Title = "Farm Island",
     Values = nameList,
     Value = nameList[9],
@@ -781,7 +781,7 @@ local CodeIsland = AutoFarmTab:Dropdown({
 
 myConfig:Register("IslCode", CodeIsland)
 
-local AutoFarm = AutoFarmTab:Toggle({
+local AutoFarm = AutoEventTab:Toggle({
 	Title = "Start Auto Farm",
 	Callback = function(state)
 		isAutoFarmRunning = state
@@ -795,7 +795,7 @@ local AutoFarm = AutoFarmTab:Toggle({
 
 myConfig:Register("AutoFarmStart", AutoFarm)
 
-AutoFarmTab:Toggle({
+AutoEventTab:Toggle({
 	Title = "Auto Farm Event",
 	Desc = "!! DO WITH YOUR OWN RISK !!",
 	Value = false,
